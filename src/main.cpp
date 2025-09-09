@@ -22,11 +22,12 @@ int main()
         menu,
         board,
         settings,
-        rules
+        rules,
+        quit
     };
     GameStates currState = title;
 
-    std::vector<GameStates>rand{title,menu,board,settings,rules};
+    std::vector<GameStates>rand{title,menu,board,settings,rules,quit};
 
     // Game loop
     while (!WindowShouldClose())
@@ -63,7 +64,7 @@ int main()
             case 1:{
                 int buttonChosen = DrawMenu(screenW, screenH);
                 if (buttonChosen != -1){
-                    currState = rand[GetRandomValue(0, 4)];
+                    currState = rand[GetRandomValue(0, 5)];
                 }
                 break;
             }
@@ -77,6 +78,9 @@ int main()
             case 4:
                 ClearBackground(BLACK);
                 DrawText("You'll get it, not stupid", 100, 540, 100, WHITE);
+                break;
+            case 5:
+                CloseWindow();
                 break;
         }
         EndDrawing();
