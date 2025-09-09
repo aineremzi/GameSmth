@@ -1,4 +1,4 @@
-SRC=src/*.cpp
+SRC=src/main.cpp src/gui.cpp src/gamescreens.cpp
 OUTPUT=main
 
 win:

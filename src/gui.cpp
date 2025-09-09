@@ -21,9 +21,10 @@ bool Button::hovered() const{
     return mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y && mouseY < button.y + button.height;
 }
 bool Button::pressed() const{
-    if (hovered() && IsMouseButtonReleased(0))
-        return true;
-    return false;
+    return hovered() && IsMouseButtonDown(0);
+}
+bool Button::released() const{
+    return hovered() && IsMouseButtonReleased(0);
 }
 void Button::drawOutline(const Color color, float lineThickness) const{
     DrawRectangleLinesEx(button, lineThickness, color);
