@@ -11,4 +11,5 @@ class Button{
         bool hovered() const;
         bool pressed() const;
         void drawOutline(const Color color, float lineThickness) const;
+        void drawButton(const Color color) const;
 };
