@@ -12,12 +12,14 @@ int main()
     SetTargetFPS(rRate);
 
     // system parametrs
-
+    int screenH = GetScreenHeight();
+    int screenW =GetScreenWidth();
 
     enum GameStates
     {
         title = 0,
-        main
+        menu,
+        board
     };
     GameStates currState = title;
 
@@ -25,11 +27,46 @@ int main()
     while (!WindowShouldClose())
     {
         BeginDrawing();
+        DrawFPS(0, 0);
         switch (currState)
         {
-        case 0:
-            DrawTitle(GetScreenWidth(), GetScreenHeight());
-            break;
+            case 0:
+                DrawTitle(screenW, screenH);
+                if (GetTime() >= 1.0f)
+                    currState = menu;
+                break;
+            case 1:
+                //initializating variables
+                int titleFontSize = screenH/10;
+                int titleOffset = -MeasureText("Dance on the boat", titleFontSize)/2;
+                int bxm = 5;
+                int buttonWidth = screenW/bxm;
+                int buttonHeight = screenH/12;
+                int buttonFontSize = buttonHeight/3;
+                float buttonVerticalPos = screenW*(bxm-1)/(2*bxm);
+                Rectangle buttons[3] = {{buttonVerticalPos, screenH*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                                        {buttonVerticalPos, screenH*3/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                                        {buttonVerticalPos, screenH*4/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
+                const char* buttonTexts[3] = {"Play", "Settings", "Quit"};
+                
+                //Drawing menu
+                ClearBackground(BLACK);
+                DrawText("Dance on the boat", screenW/2 + titleOffset, screenH/12, titleFontSize, WHITE);
+                
+                //Drawing buttons
+                for (int i = 0; i < 3; i++){
+                    DrawRectangleRec(buttons[i], GRAY); 
+                    int buttonTextOffset = -MeasureText(buttonTexts[i], buttonFontSize)/2;
+                    int textX = buttons[i].x + buttonWidth/2 + buttonTextOffset;
+                    int textY = buttons[i].y + buttonHeight/3;
+                    DrawText(buttonTexts[i], textX, textY, buttonFontSize, WHITE);
+                    
+                    //Drawing outline on hover
+                    int mouseX = GetMouseX();
+                    int mouseY = GetMouseY();
+                    if (mouseX > buttons[i].x && mouseX < buttons[i].x + buttonWidth && mouseY > buttons[i].y && mouseY < buttons[i].y + buttonHeight)
+                        DrawRectangleLinesEx(buttons[i], 5.0f, BLUE);
+                }
         }
         EndDrawing();
     }
