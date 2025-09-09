@@ -20,7 +20,8 @@ int main()
         title = 0,
         menu,
         board,
-        settings
+        settings,
+        rules
     };
     GameStates currState = title;
 
@@ -36,6 +37,8 @@ int main()
                 break;
             default:
                 SetExitKey(KEY_NULL);
+                if (IsKeyPressed(KEY_ESCAPE))
+                    currState = menu;
                 break;
         }
 
@@ -57,13 +60,16 @@ int main()
             case 1:{
                 int buttonChosen = DrawMenu(screenW, screenH);
                 switch(buttonChosen){
-                    case 0:
+                    case MENU_PLAY:
                         currState = board;
                         break;
-                    case 1:
+                    case MENU_RULES:
+                            currState = rules;
+                            break;    
+                    case MENU_SETTINGS:
                         currState = settings;
                         break;
-                    case 2:
+                    case MENU_QUIT:
                         CloseWindow();
                         break;
                     default:
@@ -74,13 +80,13 @@ int main()
             case 2:
                 ClearBackground(BLACK);
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
-                if (IsKeyPressed(KEY_ESCAPE))
-                    currState = menu;
                 break;
             case 3:
                 DrawSettingsMenu(screenW, screenH);
-                if (IsKeyPressed(KEY_ESCAPE))
-                    currState = menu;
+                break;
+            case 4:
+                ClearBackground(BLACK);
+                DrawText("You'll get it, not stupid", 100, 540, 100, WHITE);
                 break;
         }
         EndDrawing();

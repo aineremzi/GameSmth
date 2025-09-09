@@ -1,4 +1,6 @@
 #include "../include/raylib.h"
+#include <algorithm>
+#include <vector>
 #include "gameScreens.h"
 #include "gui.h"
 
@@ -25,19 +27,20 @@ int DrawMenu(int screenWidth, int screenHeight){
     int bxm = 5;
     int buttonWidth = screenWidth/bxm;
     int buttonHeight = screenHeight/12;
-    int buttonFontSize = buttonHeight/2;
+    int buttonFontSize = std::min(buttonWidth/10, buttonHeight/2);
     float buttonVerticalPos = screenWidth*(bxm-1)/(2*bxm);
-    Button buttons[3] = {{buttonVerticalPos, screenHeight*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
-                            {buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}, 
-                            {buttonVerticalPos, screenHeight*4/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
-    const char* buttonTexts[3] = {"Play", "Settings", "Quit"};
+    std::vector<Button> buttons = {{buttonVerticalPos, screenHeight*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                            {buttonVerticalPos, screenHeight*4/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                            {buttonVerticalPos, screenHeight*5/6.0f, (float)buttonWidth, (float)buttonHeight},
+                            {buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
+    std::vector<const char*> buttonTexts = {"Play", "Settings", "Quit", "Rules"};
     
     //Drawing menu
     ClearBackground(BLACK);
     DrawText("Dance on the boat", screenWidth/2 + titleOffset, screenHeight/12, titleFontSize, WHITE);
     
     //Drawing buttons
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < buttons.size(); i++){
         float lineThickness = buttonWidth/100;
         if (buttons[i].pressed()){
             buttons[i].drawButton(LIGHTGRAY, buttonTexts[i], buttonFontSize, WHITE);
