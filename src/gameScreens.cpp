@@ -19,7 +19,7 @@ void DrawTitle(int screenWidth, int screenHeight){
 
 void DrawMenu(int screenWidth, int screenHeight){
     //initializating variables
-    int titleFontSize = screenHeight/10;
+    int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Dance on the boat", titleFontSize)/2;
     int bxm = 5;
     int buttonWidth = screenWidth/bxm;

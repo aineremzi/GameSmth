@@ -1,4 +1,5 @@
 #include "gui.h"
+#include <cmath>
 
 Button::Button(float x, float y, float width, float height){
     button.x = x;
@@ -9,10 +10,11 @@ Button::Button(float x, float y, float width, float height){
 void Button::drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const{
     DrawRectangleRec(button, color); 
     if  (buttonText){
-        int buttonTextOffset = -MeasureText(buttonText, textFontSize)/2;
-        int textX = button.x + button.width/2 + buttonTextOffset;
-        int textY = button.y + button.height/3;
-        DrawText(buttonText, textX, textY, textFontSize, textColor);
+        float textCoef = 5.0f;
+        int buttonTextOffset = -MeasureTextEx(GetFontDefault(), buttonText, textFontSize, std::pow(button.width/200, textCoef)).x/2;
+        float textX = button.x + button.width/2 + buttonTextOffset;
+        float textY = button.y + button.height/3;
+        DrawTextEx(GetFontDefault(), buttonText, Vector2{textX, textY}, textFontSize, std::pow(button.width/200, textCoef) ,textColor);
     }
 }
 bool Button::hovered() const{
