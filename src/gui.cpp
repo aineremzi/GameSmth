@@ -13,7 +13,7 @@ void Button::drawButton(const Color color, const char* buttonText, const int tex
         float textCoef = 5.0f;
         int buttonTextOffset = -MeasureTextEx(GetFontDefault(), buttonText, textFontSize, std::pow(button.width/200, textCoef)).x/2;
         float textX = button.x + button.width/2 + buttonTextOffset;
-        float textY = button.y + button.height/3;
+        float textY = button.y + (button.height-textFontSize)/2;
         DrawTextEx(GetFontDefault(), buttonText, Vector2{textX, textY}, textFontSize, std::pow(button.width/200, textCoef) ,textColor);
     }
 }
