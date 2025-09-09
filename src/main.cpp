@@ -3,14 +3,11 @@
 #include "gui.h"
 #include <iostream>
 
-#define ESC_KEY 256
-
 int main()
 {
-
     // Game window initialization
-    InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "Dance on the boat");
-    // InitWindow(800, 600, "Dance on the boat");
+    std::cout << GetCurrentMonitor() << std::endl;
+    InitWindow(800, 600, "Dance on the boat");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     int rRate = GetMonitorRefreshRate(0);
     SetTargetFPS(rRate);
@@ -31,16 +28,22 @@ int main()
     while (!WindowShouldClose())
     {
         int screenH = GetScreenHeight();
-        int screenW =GetScreenWidth();
+        int screenW = GetScreenWidth();
      
         switch (currState){
             case 1:
-                SetExitKey(ESC_KEY);
+                SetExitKey(KEY_ESCAPE);
                 break;
             default:
                 SetExitKey(KEY_NULL);
                 break;
         }
+
+        if (IsKeyPressed(KEY_F11))
+            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            else
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
 
         BeginDrawing();
         DrawFPS(0, 0);
@@ -71,10 +74,12 @@ int main()
             case 2:
                 ClearBackground(BLACK);
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
+                if (IsKeyPressed(KEY_ESCAPE))
+                    currState = menu;
                 break;
             case 3:
                 DrawSettingsMenu(screenW, screenH);
-                if (IsKeyPressed(ESC_KEY))
+                if (IsKeyPressed(KEY_ESCAPE))
                     currState = menu;
                 break;
         }
