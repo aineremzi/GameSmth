@@ -11,7 +11,7 @@ void Button::drawButton(const Color color, const char* buttonText, const int tex
     if  (buttonText){
         int buttonTextOffset = -MeasureText(buttonText, textFontSize)/2;
         int textX = button.x + button.width/2 + buttonTextOffset;
-        int textY = button.y + button.height/3;
+        int textY = button.y + (button.height-textFontSize)/2;
         DrawText(buttonText, textX, textY, textFontSize, textColor);
     }
 }

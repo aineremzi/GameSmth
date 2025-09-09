@@ -3,6 +3,8 @@
 #include "gui.h"
 #include <iostream>
 
+#define ESC_KEY 256
+
 int main()
 {
 
@@ -20,7 +22,8 @@ int main()
     {
         title = 0,
         menu,
-        board
+        board,
+        settings
     };
     GameStates currState = title;
 
@@ -29,17 +32,50 @@ int main()
     {
         int screenH = GetScreenHeight();
         int screenW =GetScreenWidth();
-        if (GetTime() >= 1.0f)
-            currState = menu;
+     
+        switch (currState){
+            case 1:
+                SetExitKey(ESC_KEY);
+                break;
+            default:
+                SetExitKey(KEY_NULL);
+                break;
+        }
+
         BeginDrawing();
         DrawFPS(0, 0);
         switch (currState)
         {
             case 0:
                 DrawTitle(screenW, screenH);
+                if (GetTime() >= 1.0f)
+                    currState = menu;
                 break;
-            case 1:
-                DrawMenu(screenW, screenH);
+            case 1:{
+                int buttonChosen = DrawMenu(screenW, screenH);
+                switch(buttonChosen){
+                    case 0:
+                        currState = board;
+                        break;
+                    case 1:
+                        currState = settings;
+                        break;
+                    case 2:
+                        CloseWindow();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+            case 2:
+                ClearBackground(BLACK);
+                DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
+                break;
+            case 3:
+                DrawSettingsMenu(screenW, screenH);
+                if (IsKeyPressed(ESC_KEY))
+                    currState = menu;
                 break;
         }
         EndDrawing();
