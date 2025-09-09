@@ -1,0 +1,14 @@
+#pragma once
+#include "../include/raylib.h"
+class Button{
+    private:
+        Rectangle button;
+    public:
+        Button() = delete;
+        Button(float x, float y, float width, float height);
+        ~Button() = default;
+        void drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const;
+        bool hovered() const;
+        bool pressed() const;
+        void drawOutline(const Color color, float lineThickness) const;
+};

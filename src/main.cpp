@@ -1,5 +1,6 @@
 #include "../include/raylib.h"
 #include "gameScreens.h"
+#include "gui.h"
 #include <iostream>
 
 int main()
@@ -44,7 +45,7 @@ int main()
                 int buttonHeight = screenH/12;
                 int buttonFontSize = buttonHeight/3;
                 float buttonVerticalPos = screenW*(bxm-1)/(2*bxm);
-                Rectangle buttons[3] = {{buttonVerticalPos, screenH*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                Button buttons[3] = {{buttonVerticalPos, screenH*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
                                         {buttonVerticalPos, screenH*3/6.0f, (float)buttonWidth, (float)buttonHeight}, 
                                         {buttonVerticalPos, screenH*4/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
                 const char* buttonTexts[3] = {"Play", "Settings", "Quit"};
@@ -55,17 +56,13 @@ int main()
                 
                 //Drawing buttons
                 for (int i = 0; i < 3; i++){
-                    DrawRectangleRec(buttons[i], GRAY); 
-                    int buttonTextOffset = -MeasureText(buttonTexts[i], buttonFontSize)/2;
-                    int textX = buttons[i].x + buttonWidth/2 + buttonTextOffset;
-                    int textY = buttons[i].y + buttonHeight/3;
-                    DrawText(buttonTexts[i], textX, textY, buttonFontSize, WHITE);
+                    buttons[i].drawButton(GRAY, buttonTexts[i], buttonFontSize, WHITE);
                     
                     //Drawing outline on hover
-                    int mouseX = GetMouseX();
-                    int mouseY = GetMouseY();
-                    if (mouseX > buttons[i].x && mouseX < buttons[i].x + buttonWidth && mouseY > buttons[i].y && mouseY < buttons[i].y + buttonHeight)
-                        DrawRectangleLinesEx(buttons[i], 5.0f, BLUE);
+                    if (buttons[i].hovered()){
+                        float lineThickness = buttonWidth/100;
+                        buttons[i].drawOutline(BLUE, lineThickness);
+                    }
                 }
         }
         EndDrawing();

@@ -1,5 +1,5 @@
 #include "../include/raylib.h"
-
+#include "gameScreens.h"
 
 void DrawTitle(int screenWidth, int screenHeight){
     //Initializating variables
