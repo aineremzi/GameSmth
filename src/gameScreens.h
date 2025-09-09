@@ -1,9 +1,9 @@
 #pragma once
 
 enum MainMenuButtons{
-    MENU_PLAY = 0,
-    MENU_SETTINGS,
+    MENU_SETTINGS = 0,
     MENU_QUIT,
+    MENU_PLAY,
     MENU_RULES
 };
 

@@ -2,6 +2,7 @@
 #include "gameScreens.h"
 #include "gui.h"
 #include <iostream>
+#include <vector>
 
 int main()
 {
@@ -24,6 +25,8 @@ int main()
         rules
     };
     GameStates currState = title;
+
+    std::vector<GameStates>rand{title,menu,board,settings,rules};
 
     // Game loop
     while (!WindowShouldClose())
@@ -59,21 +62,8 @@ int main()
                 break;
             case 1:{
                 int buttonChosen = DrawMenu(screenW, screenH);
-                switch(buttonChosen){
-                    case MENU_PLAY:
-                        currState = board;
-                        break;
-                    case MENU_RULES:
-                            currState = rules;
-                            break;    
-                    case MENU_SETTINGS:
-                        currState = settings;
-                        break;
-                    case MENU_QUIT:
-                        CloseWindow();
-                        break;
-                    default:
-                        break;
+                if (buttonChosen != -1){
+                    currState = rand[GetRandomValue(0, 4)];
                 }
                 break;
             }
