@@ -1,6 +1,9 @@
+SRC=src/*.cpp
+OUTPUT=main
+
 win:
-	gcc src/main.cpp src/gameScreens.cpp src/gui.cpp -Llib -lraylib -lgdi32 -lwinmm -o main
+	gcc $(SRC) -Llib -lraylib -lgdi32 -lwinmm -o $(OUTPUT)
 	./main.exe
 linux:
-	g++ src/main.cpp src/gameScreens.cpp src/gui.cpp -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o main.game
+	g++ $(SRC) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
 	./main.game
