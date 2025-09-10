@@ -24,8 +24,13 @@ class CheckBox{
         CheckBox() = delete;
         CheckBox(float x, float y, float width, float height, float thickness, bool checked = false);
         ~CheckBox() = default;
-        void drawBox(Color color);
-        bool isChecked();
-        bool hovered();
-        bool clicked();
+        void drawBox(Color color) const;
+        bool isChecked() const;
+        bool hovered() const;
+        bool clicked() const;
+        void flip();
+};
+
+class ValueBox{
+
 };

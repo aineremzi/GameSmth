@@ -17,9 +17,7 @@ void Button::drawButton(const Color color, const char* buttonText, const int tex
     }
 }
 bool Button::hovered() const{
-    int mouseX = GetMouseX();          
-    int mouseY = GetMouseY();
-    return mouseX > button.x && mouseX < button.x + button.width && mouseY > button.y && mouseY < button.y + button.height;
+    return CheckCollisionPointRec(GetMousePosition(), button);
 }
 bool Button::pressed() const{
     return hovered() && IsMouseButtonDown(0);
@@ -41,19 +39,20 @@ CheckBox::CheckBox(float x, float y, float width, float height, float thickness,
     box.width = width;
     box.height = height;
 }
-void CheckBox::drawBox(Color color){
+void CheckBox::drawBox(Color color) const{
     if (!state){
         DrawRectangleLinesEx(box, thick, color);
     }else{
         DrawRectangleRec(box, color);
     }
 }
-bool CheckBox::isChecked(){return state;}
-bool CheckBox::hovered(){
-    int mouseX = GetMouseX();          
-    int mouseY = GetMouseY();
-    return mouseX > box.x && mouseX < box.x + box.width && mouseY > box.y && mouseY < box.y + box.height;
+bool CheckBox::isChecked() const{return state;}
+bool CheckBox::hovered() const{
+    return CheckCollisionPointRec(GetMousePosition(), box);
 }
-bool CheckBox::clicked(){
+bool CheckBox::clicked() const{
     return hovered()&&IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+}
+void CheckBox::flip(){
+    state = !state;
 }

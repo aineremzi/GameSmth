@@ -1,5 +1,13 @@
 #pragma once
 
+enum SettingsButtons{
+    SET_RESOLUTION = 0,
+    SET_FULLSCREEN,
+    SET_FPS,
+    SET_VSYNC,
+    SET_SFX
+};
+
 enum MainMenuButtons{
     MENU_PLAY = 0,
     MENU_SETTINGS,

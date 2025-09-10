@@ -9,6 +9,7 @@ int main()
     std::cout << GetCurrentMonitor() << std::endl;
     InitWindow(800, 600, "Dance on the boat");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetWindowState(FLAG_VSYNC_HINT);
     int rRate = GetMonitorRefreshRate(0);
     SetTargetFPS(rRate);
 
@@ -66,9 +67,10 @@ int main()
                     case MENU_RULES:
                             currState = rules;
                             break;    
-                    case MENU_SETTINGS:
+                    case MENU_SETTINGS:{
                         currState = settings;
                         break;
+                    }
                     case MENU_QUIT:
                         CloseWindow();
                         break;
