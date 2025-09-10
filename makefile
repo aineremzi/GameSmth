@@ -1,4 +1,4 @@
-SRC=src/main.cpp src/gui.cpp src/gamescreens.cpp
+SRC=src/main.cpp src/gui.cpp src/gameScreens.cpp
 OUTPUT=main
 
 win:

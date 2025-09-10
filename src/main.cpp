@@ -37,7 +37,7 @@ int main()
      
         switch (currState){
             case 1:
-                SetExitKey(KEY_ESCAPE);
+                SetExitKey(GetRandomValue(KEY_ZERO, KEY_NINE));
                 break;
             default:
                 SetExitKey(KEY_NULL);
