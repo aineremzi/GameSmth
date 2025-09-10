@@ -63,8 +63,14 @@ int DrawMenu(int screenWidth, int screenHeight){
 }
 
 void DrawSettingsMenu(int screenWidth, int screenHeight){
+    //Initializing variables
     int titleFontSize = screenHeight/10;
     int titleOffset = -MeasureText("Settings", titleFontSize)/2;
+    int settingsFontSize = std::min(screenHeight, screenWidth)/5;
+    std::vector<char*> settingsNames = {"Resolution", "Fullscreen", "Limit FPS", "Vsync","Sound effects"};
+    std::vector<CheckBox> settingsBoxes = {};
+
+    //Begin Drawing
     ClearBackground(BLACK);
     DrawText("Settings", screenWidth/2 + titleOffset, screenHeight/12, titleFontSize, WHITE);
 }

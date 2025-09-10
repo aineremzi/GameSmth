@@ -1,5 +1,6 @@
 #include "gui.h"
 
+//Button class realization
 Button::Button(float x, float y, float width, float height){
     button.x = x;
     button.y = y;
@@ -29,7 +30,30 @@ bool Button::released() const{
 void Button::drawOutline(const Color color, float lineThickness) const{
     DrawRectangleLinesEx(button, lineThickness, color);
 }
-
 void Button::drawButton(const Color color) const{
     DrawRectangleRec(button, color);
+}
+
+//CheckBox class realization
+CheckBox::CheckBox(float x, float y, float width, float height, float thickness, bool checked):thick(thickness), state(checked){
+    box.x = x;
+    box.y = y;
+    box.width = width;
+    box.height = height;
+}
+void CheckBox::drawBox(Color color){
+    if (!state){
+        DrawRectangleLinesEx(box, thick, color);
+    }else{
+        DrawRectangleRec(box, color);
+    }
+}
+bool CheckBox::isChecked(){return state;}
+bool CheckBox::hovered(){
+    int mouseX = GetMouseX();          
+    int mouseY = GetMouseY();
+    return mouseX > box.x && mouseX < box.x + box.width && mouseY > box.y && mouseY < box.y + box.height;
+}
+bool CheckBox::clicked(){
+    return hovered()&&IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 }
