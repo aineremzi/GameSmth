@@ -1,33 +1,38 @@
 #pragma once
 #include "../include/raylib.h"
-class Button{
+class UIElement{
+    protected:
+        Rectangle element;
+    public:
+        virtual bool hovered() const;
+        virtual bool pressed() const;
+        virtual bool released() const;
+        virtual bool clicked() const;
+        virtual void drawOutline(const Color color, float lineThickness) const;
+        virtual void draw(const Color color) const = 0;
+
+};
+
+class Button : public UIElement{
     private:
-        Rectangle button;
     public:
         Button() = delete;
         Button(float x, float y, float width, float height);
         ~Button() = default;
         void drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const;
-        bool hovered() const;
-        bool pressed() const;
-        bool released() const;
-        void drawOutline(const Color color, float lineThickness) const;
-        void drawButton(const Color color) const;
+        void draw(const Color color) const override;
 };
 
-class CheckBox{
+class CheckBox: public UIElement{
     private:
-        Rectangle box;
         float thick;
         bool state;
     public:
         CheckBox() = delete;
         CheckBox(float x, float y, float width, float height, float thickness, bool checked = false);
         ~CheckBox() = default;
-        void drawBox(Color color) const;
+        void draw(const Color color) const override;
         bool isChecked() const;
-        bool hovered() const;
-        bool clicked() const;
         void flip();
 };
 

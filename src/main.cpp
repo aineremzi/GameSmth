@@ -6,7 +6,6 @@
 int main()
 {
     // Game window initialization
-    std::cout << GetCurrentMonitor() << std::endl;
     InitWindow(800, 600, "Dance on the boat");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowState(FLAG_VSYNC_HINT);

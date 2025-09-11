@@ -1,58 +1,56 @@
 #include "gui.h"
 
+bool UIElement::hovered() const{
+    return CheckCollisionPointRec(GetMousePosition(), element);
+}
+bool UIElement::pressed() const{
+    return hovered() && IsMouseButtonDown(0);
+}
+bool UIElement::released() const{
+    return hovered() && IsMouseButtonReleased(0);
+}
+bool UIElement::clicked() const{
+    return hovered() && IsMouseButtonPressed(0);
+}
+void UIElement::drawOutline(const Color color, float lineThickness) const{
+    DrawRectangleLinesEx(element, lineThickness, color);
+}
+
 //Button class realization
 Button::Button(float x, float y, float width, float height){
-    button.x = x;
-    button.y = y;
-    button.width = width;
-    button.height = height;
+    element.x = x;
+    element.y = y;
+    element.width = width;
+    element.height = height;
 }
 void Button::drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const{
-    DrawRectangleRec(button, color); 
+    DrawRectangleRec(element, color); 
     if  (buttonText){
         int buttonTextOffset = -MeasureText(buttonText, textFontSize)/2;
-        int textX = button.x + button.width/2 + buttonTextOffset;
-        int textY = button.y + (button.height-textFontSize)/2;
+        int textX = element.x + element.width/2 + buttonTextOffset;
+        int textY = element.y + (element.height-textFontSize)/2;
         DrawText(buttonText, textX, textY, textFontSize, textColor);
     }
 }
-bool Button::hovered() const{
-    return CheckCollisionPointRec(GetMousePosition(), button);
-}
-bool Button::pressed() const{
-    return hovered() && IsMouseButtonDown(0);
-}
-bool Button::released() const{
-    return hovered() && IsMouseButtonReleased(0);
-}
-void Button::drawOutline(const Color color, float lineThickness) const{
-    DrawRectangleLinesEx(button, lineThickness, color);
-}
-void Button::drawButton(const Color color) const{
-    DrawRectangleRec(button, color);
+void Button::draw(const Color color) const{
+    DrawRectangleRec(element, color);
 }
 
 //CheckBox class realization
 CheckBox::CheckBox(float x, float y, float width, float height, float thickness, bool checked):thick(thickness), state(checked){
-    box.x = x;
-    box.y = y;
-    box.width = width;
-    box.height = height;
+    element.x = x;
+    element.y = y;
+    element.width = width;
+    element.height = height;
 }
-void CheckBox::drawBox(Color color) const{
+void CheckBox::draw(Color color) const{
     if (!state){
-        DrawRectangleLinesEx(box, thick, color);
+        DrawRectangleLinesEx(element, thick, color);
     }else{
-        DrawRectangleRec(box, color);
+        DrawRectangleRec(element, color);
     }
 }
 bool CheckBox::isChecked() const{return state;}
-bool CheckBox::hovered() const{
-    return CheckCollisionPointRec(GetMousePosition(), box);
-}
-bool CheckBox::clicked() const{
-    return hovered()&&IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-}
 void CheckBox::flip(){
     state = !state;
 }

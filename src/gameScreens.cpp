@@ -77,8 +77,12 @@ void DrawSettingsMenu(int screenWidth, int screenHeight){
     float boxSize = settingsFontSize;
     float boxThickness = boxSize/5;
     float boxYcoord = screenHeight/settingsYCoef;
-    std::vector<CheckBox> settingsBoxes = {{boxXCoords - boxSize/2, boxYcoord*2  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_FULLSCREEN_MODE)},
-                                           {boxXCoords - boxSize/2, boxYcoord*4  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_VSYNC_HINT)}};
+    std::vector<CheckBox> settingsBoxes = {{boxXCoords - boxSize/2.0f, boxYcoord*2  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_FULLSCREEN_MODE)},
+                                           {boxXCoords - boxSize/2.0f, boxYcoord*4  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_VSYNC_HINT)}};
+
+    
+    // std::vector<CheckBox> settingsBoxes = {{300.0f, 200.0f, 50.0f, 50.0f, 10.0f, false},
+    //                                        {500.0f, 200.f, 50.0f, 50.0f, 10.0f, true}};
 
     //Begin Drawing
     ClearBackground(BLACK);
@@ -93,9 +97,9 @@ void DrawSettingsMenu(int screenWidth, int screenHeight){
                 break;
             case SET_FULLSCREEN:
                 if(!settingsBoxes[0].hovered()){
-                    settingsBoxes[0].drawBox(LIGHTGRAY);
+                    settingsBoxes[0].draw(LIGHTGRAY);
                 }else{
-                    settingsBoxes[0].drawBox(WHITE);
+                    settingsBoxes[0].draw(WHITE);
                 }
                 if(settingsBoxes[0].clicked()){
                     if(!settingsBoxes[0].isChecked()){
@@ -113,9 +117,9 @@ void DrawSettingsMenu(int screenWidth, int screenHeight){
                 break;
             case SET_VSYNC:
                 if(!settingsBoxes[1].hovered()){
-                    settingsBoxes[1].drawBox(LIGHTGRAY);
+                    settingsBoxes[1].draw(LIGHTGRAY);
                 }else{
-                    settingsBoxes[1].drawBox(WHITE);
+                    settingsBoxes[1].draw(WHITE);
                 }
                 if(settingsBoxes[1].clicked()){
                     if(!settingsBoxes[1].isChecked()){
