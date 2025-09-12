@@ -1,12 +1,11 @@
 #include "settings.h"
 
 Settings::Settings(){
-    std::ifstream iSettings("Settings.pref", std::ios::binary);
-    if(iSettings){ 
-        int temp;
-        iSettings >> temp;
-        resolution = static_cast<ResolutionNames>(temp);
-        iSettings >> temp;
+    std::ifstream iSettings("Settings.pref");
+    if(iSettings){
+        std::string line;
+        getline(iSettings, line);
+        line = line.substr(line.find(':')+2);
     }else{
         resolution = RESOLUTION_VGA;
         fsMode = WINDOWED;
