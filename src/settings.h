@@ -1,8 +1,15 @@
 #pragma once
 #include <map>
-#include <vector>
 #include <fstream>
+#include <string>
 #include "../include/raylib.h"
+
+#define DEFAULT_FPS GetMonitorRefreshRate(0)
+#define DEFAULT_RESOLUTION RESOLUTION_VGA
+#define DEFAULT_VOLUME 1.0f
+#define DEFAULT_VSYNC true
+#define DEFAULT_FULLSCREEN WINDOWED
+
 
 enum ResolutionNames{
     RESOLUTION_8K = 0,
@@ -24,7 +31,7 @@ enum FullscreenMode{
     FULLSCREEN
 };
 
-std::map<ResolutionNames, std::vector<int>> Resolutions = {{RESOLUTION_8K, {7680, 4320}},
+std::map<ResolutionNames, Vector2> Resolutions = {{RESOLUTION_8K, {7680, 4320}},
                                                            {RESOLUTION_4K, {3840, 2160}},
                                                            {RESOLUTION_2K, {2048, 1152}},
                                                            {RESOLUTION_FULLHD, {1920, 1080}},
@@ -41,7 +48,7 @@ class Settings{
     private:
         ResolutionNames resolution;
         FullscreenMode fsMode;
-        bool VSync;
+        bool vSync;
         float SFXVolume;
         int fpsLimit;
     public:
@@ -49,4 +56,19 @@ class Settings{
         ~Settings() = default;
         void init();
         int save();
+        Vector2 getResolution();
+        ResolutionNames getResolutionName();
+        void setResolution(ResolutionNames Resolution);
+        int getFPS();
+        void setFPS(int fps);
+        float getVolume();
+        void setVolume(float volume);
+        FullscreenMode getFullscreenMode();
+        void setFulscreenMode(FullscreenMode mode);
 };
+
+void getSetting(std::string value, ResolutionNames resolution);
+void getSetting(std::string value, float volume);
+void getSetting(std::string value, bool vsync);
+void getSetting(std::string value, int fps);
+void getSetting(std::string value, FullscreenMode fullscreen);
