@@ -28,14 +28,42 @@ Settings::Settings(){
     }
 }
 void Settings::init(){
-    
+    SetWindowSize(Resolutions[resolution].x, Resolutions[resolution].y); //setting resolution
+    SetTargetFPS(fpsLimit); //Setting fps limit
+    if(vSync) // Setting vsync
+        SetWindowState(FLAG_VSYNC_HINT);
+    else
+        ClearWindowState(FLAG_VSYNC_HINT);
+    switch(fsMode){ //Setting fullscreen mode
+        case WINDOWED:
+            if(IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            else if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+        case BORDERLESS:
+            if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            break;
+        case FULLSCREEN:
+            if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            if (!IsWindowState(FLAG_FULLSCREEN_MODE))
+                SetWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+    }
+    setVolume(SFXVolume); //Setting volume
 }
 int Settings::save(){
     std::ofstream oSettings("Settings.pref");
     if (oSettings){    
         oSettings << "Resolution: " << resolution << "\nFullscreen: " << fsMode << "\nVsync: " << vSync << "\nFPS: " << fpsLimit << "\nVolume: " << SFXVolume << std::endl;
         oSettings.close();
+        return 0;
     }
+    return -1;
 }
 Vector2 Settings::getResolution(){
     return Resolutions[resolution];

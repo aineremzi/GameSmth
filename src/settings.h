@@ -10,7 +10,6 @@
 #define DEFAULT_VSYNC true
 #define DEFAULT_FULLSCREEN WINDOWED
 
-
 enum ResolutionNames{
     RESOLUTION_8K = 0,
     RESOLUTION_4K,

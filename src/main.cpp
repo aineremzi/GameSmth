@@ -1,16 +1,19 @@
 #include "../include/raylib.h"
 #include "gameScreens.h"
 #include "gui.h"
+#include "settings.h"
 #include <iostream>
+
+#define TITLE "Dance on the boat"
 
 int main()
 {
     // Game window initialization
-    InitWindow(800, 600, "Dance on the boat");
+    Settings currSettings;
+    Vector2 currResolution = currSettings.getResolution();
+    InitWindow(currResolution.x, currResolution.y, TITLE);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    SetWindowState(FLAG_VSYNC_HINT);
-    int rRate = GetMonitorRefreshRate(0);
-    SetTargetFPS(rRate);
+    currSettings.init();
 
     // system parametrs
     
