@@ -58,8 +58,43 @@ void Settings::init(){
 }
 int Settings::save(){
     std::ofstream oSettings("Settings.pref");
-    if (oSettings){    
-        oSettings << "Resolution: " << resolution << "\nFullscreen: " << fsMode << "\nVsync: " << vSync << "\nFPS: " << fpsLimit << "\nVolume: " << SFXVolume << std::endl;
+    if (oSettings){
+        switch(resolution){
+            case RESOLUTION_8K:
+                oSettings << "Resolution: " << "8K";
+                break;
+            case RESOLUTION_4K:
+                oSettings << "Resolution: " << "4K";
+                break;
+            case RESOLUTION_2K:
+                oSettings << "Resolution: " << "2K";
+                break;
+            case RESOLUTION_FULLHD:
+                oSettings << "Resolution: " << "FULLHD";
+                break;
+            case RESOLUTION_HD:
+                oSettings << "Resolution: " << "HD";
+                break;
+            case RESOLUTION_1080I:
+                oSettings << "Resolution: " << "1080I";
+                break;
+            case RESOLUTION_VGA:
+                oSettings << "Resolution: " << "VGA";
+                break;
+            case RESOLUTION_SVGA:
+                oSettings << "Resolution: " << "SVGA";
+                break;
+            case RESOLUTION_XGA:
+                oSettings << "Resolution: " << "XGA";
+                break;
+            case RESOLUTION_W2K:
+                oSettings << "Resolution: " << "W2K";
+                break;
+            case RESOLUTION_WFULLHD:
+                oSettings << "Resolution: " << "WFULLHD";
+                break;
+        }    
+        oSettings << "\nFullscreen: " << fsMode << "\nVsync: " << vSync << "\nFPS: " << fpsLimit << "\nVolume: " << SFXVolume << std::endl;
         oSettings.close();
         return 0;
     }
@@ -91,31 +126,51 @@ FullscreenMode Settings::getFullscreenMode(){
 }
 void Settings::setFulscreenMode(FullscreenMode mode){
     fsMode = mode;
+    switch (fsMode){
+        case WINDOWED:
+            if(IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            else if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+        case BORDERLESS:
+            if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            break;
+        case FULLSCREEN:
+            if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            if (!IsWindowState(FLAG_FULLSCREEN_MODE))
+                SetWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+    }
 }
 
 
 void getSetting(std::string value, ResolutionNames resolution){
-    if (value =="RESOLUTION_1080I"){
+    if (value =="1080I"){
         value = RESOLUTION_1080I;
-    }else if (value == "RESOLUTION_8K"){
+    }else if (value == "8K"){
         value = RESOLUTION_8K;
-    }else if (value == "RESOLUTION_4K"){
+    }else if (value == "4K"){
         value = RESOLUTION_4K;
-    }else if (value == "RESOLUTION_2K"){
+    }else if (value == "2K"){
         value = RESOLUTION_2K;
-    }else if (value == "RESOLUTION_FULLHD"){
+    }else if (value == "FULLHD"){
         value = RESOLUTION_FULLHD;
-    }else if (value == "RESOLUTION_HD"){
+    }else if (value == "HD"){
         value = RESOLUTION_HD;
-    }else if (value == "RESOLUTION_WFULLHD"){
+    }else if (value == "WFULLHD"){
         value = RESOLUTION_WFULLHD;
-    }else if (value == "RESOLUTION_W2K"){
+    }else if (value == "W2K"){
         value = RESOLUTION_W2K;
-    }else if (value == "RESOLUTION_VGA"){
+    }else if (value == "VGA"){
         value = RESOLUTION_VGA;
-    }else if (value == "RESOLUTION_SVGA"){
+    }else if (value == "SVGA"){
         value = RESOLUTION_SVGA;
-    }else if (value == "RESOLUTION_XGA"){
+    }else if (value == "XGA"){
         value = RESOLUTION_XGA;
     }else{
         value = DEFAULT_RESOLUTION;

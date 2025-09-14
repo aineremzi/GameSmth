@@ -9,9 +9,9 @@
 int main()
 {
     // Game window initialization
+    InitWindow(800, 600, TITLE);
     Settings currSettings;
     Vector2 currResolution = currSettings.getResolution();
-    InitWindow(currResolution.x, currResolution.y, TITLE);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     currSettings.init();
 
@@ -46,10 +46,10 @@ int main()
         }
 
         if (IsKeyPressed(KEY_F11))
-            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
-                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            if (currSettings.getFullscreenMode() == WINDOWED)
+                currSettings.setFulscreenMode(BORDERLESS);
             else
-                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+                currSettings.setFulscreenMode(WINDOWED);
 
         BeginDrawing();
         DrawFPS(0, 0);
@@ -95,4 +95,6 @@ int main()
         }
         EndDrawing();
     }
+
+    currSettings.save();
 }
