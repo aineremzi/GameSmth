@@ -30,17 +30,17 @@ enum FullscreenMode{
     FULLSCREEN
 };
 
-std::map<ResolutionNames, Vector2> Resolutions = {{RESOLUTION_8K, {7680, 4320}},
-                                                           {RESOLUTION_4K, {3840, 2160}},
-                                                           {RESOLUTION_2K, {2048, 1152}},
-                                                           {RESOLUTION_FULLHD, {1920, 1080}},
-                                                           {RESOLUTION_HD, {1280, 720}},
-                                                           {RESOLUTION_WFULLHD, {1920, 1200}},
-                                                           {RESOLUTION_W2K, {2560, 1600}},
-                                                           {RESOLUTION_VGA, {640, 480}},
-                                                           {RESOLUTION_SVGA, {800, 600}},
-                                                           {RESOLUTION_XGA, {1024, 768}},
-                                                           {RESOLUTION_1080I, {1440, 1200}}};
+static std::map<ResolutionNames, Vector2> Resolutions = {{RESOLUTION_8K, {7680, 4320}},
+                                                      {RESOLUTION_4K, {3840, 2160}},
+                                                      {RESOLUTION_2K, {2048, 1152}},
+                                                      {RESOLUTION_FULLHD, {1920, 1080}},
+                                                      {RESOLUTION_HD, {1280, 720}},
+                                                      {RESOLUTION_WFULLHD, {1920, 1200}},
+                                                      {RESOLUTION_W2K, {2560, 1600}},
+                                                      {RESOLUTION_VGA, {640, 480}},
+                                                      {RESOLUTION_SVGA, {800, 600}},
+                                                      {RESOLUTION_XGA, {1024, 768}},
+                                                      {RESOLUTION_1080I, {1440, 1200}}};
                                                            
 
 class Settings{
