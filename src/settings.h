@@ -4,7 +4,7 @@
 #include <string>
 #include "../include/raylib.h"
 
-#define DEFAULT_FPS GetMonitorRefreshRate(0)
+#define DEFAULT_FPS 0
 #define DEFAULT_RESOLUTION RESOLUTION_VGA
 #define DEFAULT_VOLUME 1.0f
 #define DEFAULT_VSYNC true
@@ -66,8 +66,8 @@ class Settings{
         void setFulscreenMode(FullscreenMode mode);
 };
 
-void getSetting(std::string value, ResolutionNames resolution);
-void getSetting(std::string value, float volume);
-void getSetting(std::string value, bool vsync);
-void getSetting(std::string value, int fps);
-void getSetting(std::string value, FullscreenMode fullscreen);
+ResolutionNames getSettingResolution(std::string value);
+float getSettingVolume(std::string value);
+int getSettingFPS(std::string value);
+FullscreenMode getSettingFullscreen(std::string value);
+bool getSettingVsync(std::string value);

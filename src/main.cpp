@@ -9,14 +9,12 @@
 int main()
 {
     // Game window initialization
-    InitWindow(800, 600, TITLE);
     Settings currSettings;
-    Vector2 currResolution = currSettings.getResolution();
+    InitWindow(currSettings.getResolution().x, currSettings.getResolution().y, TITLE);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     currSettings.init();
 
-    // system parametrs
-    
+    bool drawFPS = false;
 
     enum GameStates
     {
@@ -24,16 +22,20 @@ int main()
         menu,
         board,
         settings,
-        rules
+        rules,
+        quit
     };
     GameStates currState = title;
 
     // Game loop
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && currState != quit)
     {
         int screenH = GetScreenHeight();
         int screenW = GetScreenWidth();
      
+        if (IsKeyPressed(KEY_F3))
+            drawFPS = !drawFPS;
+
         switch (currState){
             case 1:
                 SetExitKey(KEY_ESCAPE);
@@ -52,7 +54,8 @@ int main()
                 currSettings.setFulscreenMode(WINDOWED);
 
         BeginDrawing();
-        DrawFPS(0, 0);
+        if (drawFPS)
+            DrawFPS(0, 0);
         switch (currState)
         {
             case 0:
@@ -74,7 +77,7 @@ int main()
                         break;
                     }
                     case MENU_QUIT:
-                        CloseWindow();
+                        currState = quit;
                         break;
                     default:
                         break;

@@ -6,16 +6,16 @@ Settings::Settings(){
         for (std::string line; getline(iSettings, line);){
             std::string title = line.substr(0, line.find(':'));
             line = line.substr(line.find(':')+2);
-            if (title == "Resolution:"){
-                getSetting(line, resolution);
-            }else if (title == "Fullscreen:"){
-                getSetting(line, fsMode);
-            }else if (title == "Vsync:"){
-                getSetting(line, vSync);
-            }else if (title == "FPS:"){
-                getSetting(line, fpsLimit);
-            }else if (title == "Volume:"){
-                getSetting(line, SFXVolume);
+            if (title == "Resolution"){
+                resolution = getSettingResolution(line);
+            }else if (title == "Fullscreen"){
+                fsMode = getSettingFullscreen(line);
+            }else if (title == "Vsync"){
+                vSync = getSettingVsync(line);
+            }else if (title == "FPS"){
+                fpsLimit = getSettingFPS(line);
+            }else if (title == "Volume"){
+                SFXVolume =getSettingVolume(line);
             }
         }
         iSettings.close();
@@ -57,7 +57,7 @@ void Settings::init(){
     setVolume(SFXVolume); //Setting volume
 }
 int Settings::save(){
-    std::ofstream oSettings("Settings.pref");
+    std::ofstream oSettings("Settings.pref", std::ios_base::trunc);
     if (oSettings){
         switch(resolution){
             case RESOLUTION_8K:
@@ -92,6 +92,9 @@ int Settings::save(){
                 break;
             case RESOLUTION_WFULLHD:
                 oSettings << "Resolution: " << "WFULLHD";
+                break;
+            default:
+                oSettings << "Resolution: NaN";
                 break;
         }    
         oSettings << "\nFullscreen: " << fsMode << "\nVsync: " << vSync << "\nFPS: " << fpsLimit << "\nVolume: " << SFXVolume << std::endl;
@@ -149,69 +152,75 @@ void Settings::setFulscreenMode(FullscreenMode mode){
 }
 
 
-void getSetting(std::string value, ResolutionNames resolution){
+ResolutionNames getSettingResolution(std::string value){
     if (value =="1080I"){
-        value = RESOLUTION_1080I;
+        return RESOLUTION_1080I;
     }else if (value == "8K"){
-        value = RESOLUTION_8K;
+        return RESOLUTION_8K;
     }else if (value == "4K"){
-        value = RESOLUTION_4K;
+        return RESOLUTION_4K;
     }else if (value == "2K"){
-        value = RESOLUTION_2K;
+        return RESOLUTION_2K;
     }else if (value == "FULLHD"){
-        value = RESOLUTION_FULLHD;
+        return RESOLUTION_FULLHD;
     }else if (value == "HD"){
-        value = RESOLUTION_HD;
+        return RESOLUTION_HD;
     }else if (value == "WFULLHD"){
-        value = RESOLUTION_WFULLHD;
+        return RESOLUTION_WFULLHD;
     }else if (value == "W2K"){
-        value = RESOLUTION_W2K;
+        return RESOLUTION_W2K;
     }else if (value == "VGA"){
-        value = RESOLUTION_VGA;
+        return RESOLUTION_VGA;
     }else if (value == "SVGA"){
-        value = RESOLUTION_SVGA;
+        return RESOLUTION_SVGA;
     }else if (value == "XGA"){
-        value = RESOLUTION_XGA;
+        return RESOLUTION_XGA;
     }else{
-        value = DEFAULT_RESOLUTION;
+        return DEFAULT_RESOLUTION;
     }
 }
 
-void getSetting(std::string value, float volume){
+float getSettingVolume(std::string value){
     try{
-        volume = std::stof(value);
+        return std::stof(value);
     }
     catch(std::invalid_argument){
-        volume = DEFAULT_VOLUME;
+        return DEFAULT_VOLUME;
+    }
+    catch(std::out_of_range){
+        return DEFAULT_VOLUME;
     }
 }
 
-void getSetting(std::string value, bool vsync){
+bool getSettingVsync(std::string value){
     if (value == "true"){
-        vsync = true;
+        return true;
     }else{
-        vsync = false;
+        return false;
     }
 }
 
-void getSetting(std::string value, int fps){
+int getSettingFPS(std::string value){
     try{
-        fps = std::stoi(value);
+        return std::stoi(value);
     } 
     catch(std::invalid_argument){
-        fps = DEFAULT_FPS;
+        return DEFAULT_FPS;
+    }
+    catch(std::out_of_range){
+        return DEFAULT_VOLUME;
     }
 }
 
-void getSetting(std::string value, FullscreenMode fullscreen){
+FullscreenMode getSettingFullscreen(std::string value){
     if (value == "WINDOWED"){
-        value = WINDOWED;
+        return WINDOWED;
     }else if (value == "BORDERLESS"){
-        value = BORDERLESS;
+        return BORDERLESS;
     }else if (value == "FULLSCREEN"){
-        value = FULLSCREEN;
+        return FULLSCREEN;
     }else{
-        value = DEFAULT_FULLSCREEN;
+        return DEFAULT_FULLSCREEN;
     }
 }
 
