@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <vector>
 #include "../include/raylib.h"
 class UIElement{
     protected:
@@ -8,6 +10,8 @@ class UIElement{
         virtual bool pressed() const;
         virtual bool released() const;
         virtual bool clicked() const;
+        virtual void changePosition(float x, float y);
+        virtual void changePosition(Vector2 coords);
         virtual void drawOutline(const Color color, float lineThickness) const;
         virtual void draw(const Color color) const = 0;
 
@@ -36,6 +40,28 @@ class CheckBox: public UIElement{
         void flip();
 };
 
-class ValueBox{
+class ValueBox: public UIElement{
+    private:
+        std::string _value;
+        float thick;
+    public:
+        ValueBox(float x, float y, float width, float height, float thickness, std::string value);
+        void draw(const Color color) const override;
+        void setValue(std::string value);
+        std::string getValue() const;
+};
 
+class DropDownList: public UIElement{
+    private:
+        bool state;
+        std::vector<std::string> options;
+        int currOption;
+    public:
+        DropDownList(float x, float y, float width, float height, float thickness, std::vector<std::string> values, int currentOption);
+        int chosenOption() const;
+        void setOption(int option);
+        void open();
+        void close();
+        void switchState();
+        bool isOpen() const;
 };

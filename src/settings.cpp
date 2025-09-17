@@ -27,6 +27,8 @@ Settings::Settings(){
         fpsLimit = DEFAULT_FPS;
     }
 }
+
+
 void Settings::init(){
     SetWindowSize(Resolutions[resolution].x, Resolutions[resolution].y); //setting resolution
     SetTargetFPS(fpsLimit); //Setting fps limit

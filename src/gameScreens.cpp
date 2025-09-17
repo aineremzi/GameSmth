@@ -19,6 +19,8 @@ void DrawTitle(int screenWidth, int screenHeight){
     DrawRectangle(screenWidth / 3.0f, yb, screenWidth / 3.0f, screenHeight / 20.0f, WHITE);
 }
 
+
+
 int DrawMenu(int screenWidth, int screenHeight){
     //initializating variables
     int returnValue = -1;
@@ -62,7 +64,9 @@ int DrawMenu(int screenWidth, int screenHeight){
     return returnValue;
 }
 
-void DrawSettingsMenu(int screenWidth, int screenHeight){
+
+
+void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
     //Initializing variables
     int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Settings", titleFontSize)/2;
@@ -71,19 +75,12 @@ void DrawSettingsMenu(int screenWidth, int screenHeight){
     int settingsFontSize = std::min(screenHeight, screenWidth)/20;
     int settingsXCoord = screenWidth/3;
     int settingsYCoef = 10;
-    std::vector<std::pair<const char*, SettingsButtons>> settingsNames = {{"Resolution", SET_RESOLUTION}, {"Fullscreen", SET_FULLSCREEN}, {"Limit FPS", SET_FPS}, {"Vsync", SET_VSYNC}, {"Sound effects", SET_SFX}};
+    std::vector<std::pair<const char*, UIElement*>> settingsNames = {{"Resolution", {}}, 
+                                                                     {"Fullscreen", {}}, 
+                                                                     {"Limit FPS", {}},
+                                                                     {"Vsync", CheckBox{settingsXCoord, 0, 50, 50, 10, settings.getVsync()}},
+                                                                     {"Sound effects", {}}};
     
-    float boxXCoords = screenWidth-settingsXCoord; 
-    float boxSize = settingsFontSize;
-    float boxThickness = boxSize/5;
-    float boxYcoord = screenHeight/settingsYCoef;
-    std::vector<CheckBox> settingsBoxes = {{boxXCoords - boxSize/2.0f, boxYcoord*2  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_FULLSCREEN_MODE)},
-                                           {boxXCoords - boxSize/2.0f, boxYcoord*4  + titleYCoords + titleFontSize, boxSize, boxSize, boxThickness, IsWindowState(FLAG_VSYNC_HINT)}};
-
-    
-    // std::vector<CheckBox> settingsBoxes = {{300.0f, 200.0f, 50.0f, 50.0f, 10.0f, false},
-    //                                        {500.0f, 200.f, 50.0f, 50.0f, 10.0f, true}};
-
     //Begin Drawing
     ClearBackground(BLACK);
     DrawText("Settings", screenWidth/2 + titleOffset, titleYCoords, titleFontSize, WHITE);
@@ -91,50 +88,5 @@ void DrawSettingsMenu(int screenWidth, int screenHeight){
     for (int i = 0; i < settingsNames.size(); i++){
         int settingsTextOffset = -MeasureText(settingsNames[i].first, settingsFontSize)/2;
         DrawText(settingsNames[i].first, settingsXCoord + settingsTextOffset, (screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize, settingsFontSize, WHITE);
-        switch (settingsNames[i].second){
-            case SET_RESOLUTION:
-                
-                break;
-            case SET_FULLSCREEN:
-                if(!settingsBoxes[0].hovered()){
-                    settingsBoxes[0].draw(LIGHTGRAY);
-                }else{
-                    settingsBoxes[0].draw(WHITE);
-                }
-                if(settingsBoxes[0].clicked()){
-                    if(!settingsBoxes[0].isChecked()){
-                        SetWindowState(FLAG_FULLSCREEN_MODE);
-                        settingsBoxes[0].flip();
-                    }
-                    else{
-                        ClearWindowState(FLAG_FULLSCREEN_MODE);
-                        settingsBoxes[0].flip();
-                    }
-                }   
-                break;
-            case SET_FPS:
-                
-                break;
-            case SET_VSYNC:
-                if(!settingsBoxes[1].hovered()){
-                    settingsBoxes[1].draw(LIGHTGRAY);
-                }else{
-                    settingsBoxes[1].draw(WHITE);
-                }
-                if(settingsBoxes[1].clicked()){
-                    if(!settingsBoxes[1].isChecked()){
-                        SetWindowState(FLAG_VSYNC_HINT);
-                        settingsBoxes[1].flip();
-                    }
-                    else{
-                        ClearWindowState(FLAG_VSYNC_HINT);
-                        settingsBoxes[1].flip();
-                    }
-                }   
-                break;
-            case SET_SFX:
-                
-                break;
-        }
     }
 }

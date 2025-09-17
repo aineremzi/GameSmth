@@ -15,6 +15,16 @@ bool UIElement::clicked() const{
 void UIElement::drawOutline(const Color color, float lineThickness) const{
     DrawRectangleLinesEx(element, lineThickness, color);
 }
+void UIElement::changePosition(float x, float y){
+    element.x = x;
+    element.y = y;
+}
+void UIElement::changePosition(Vector2 coords){
+    element.x = coords.x;
+    element.y = coords.y;
+}
+
+
 
 //Button class realization
 Button::Button(float x, float y, float width, float height){
@@ -36,6 +46,8 @@ void Button::draw(const Color color) const{
     DrawRectangleRec(element, color);
 }
 
+
+
 //CheckBox class realization
 CheckBox::CheckBox(float x, float y, float width, float height, float thickness, bool checked):thick(thickness), state(checked){
     element.x = x;
@@ -53,4 +65,51 @@ void CheckBox::draw(Color color) const{
 bool CheckBox::isChecked() const{return state;}
 void CheckBox::flip(){
     state = !state;
+}
+
+
+
+//ValueBox class realization
+ValueBox::ValueBox(float x, float y, float width, float height, float thickness, std::string value):thick(thickness), _value(value){
+    element.x = x;
+    element.y = y;
+    element.width = width;
+    element.height = height;
+}
+void ValueBox::draw(const Color color) const{
+
+}
+void ValueBox::setValue(std::string value){
+    _value = value;
+}
+std::string ValueBox::getValue() const{
+    return _value;
+}
+
+
+
+//DropDownList class realization
+DropDownList::DropDownList(float x, float y, float width, float height, float thickness, std::vector<std::string> values, int currentOption):options(values), currOption(currentOption), state(false){
+    element.x = x;
+    element.y = y;
+    element.width = width;
+    element.height = height;
+}
+int DropDownList::chosenOption() const{
+    return currOption;
+}
+void DropDownList::setOption(int option){
+    currOption = option;
+}
+void DropDownList::open(){
+    state = true;
+}
+void DropDownList::close(){
+    state = false;
+}
+void DropDownList::switchState(){
+    state = !state;
+}
+bool DropDownList::isOpen() const{
+    return state;
 }
