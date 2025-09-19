@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <map>
 #include "../include/raylib.h"
 class UIElement{
     protected:
@@ -41,23 +41,41 @@ class CheckBox: public UIElement{
 };
 
 class ValueBox: public UIElement{
-    private:
-        std::string _value;
-        float thick;
     public:
-        ValueBox(float x, float y, float width, float height, float thickness, std::string value);
+        enum class BoxType{
+            NUMBERS = 0,
+            LETTERS,
+            REDUCED,
+            ALL
+        };
+        ValueBox(float x, float y, float width, float height, float thickness, std::string value, BoxType boxType);
         void draw(const Color color) const override;
         void setValue(std::string value);
         std::string getValue() const;
+        bool isActive();
+        void activate();
+        void deactivate();
+        void switchState();
+    private:
+        std::string _value;
+        float thick;
+        std::string input;
+        bool state;
+        BoxType type;
+        std::map<BoxType, std::pair<int, int>> typeDesc = {{BoxType::NUMBERS, {KEY_ZERO, KEY_NINE}},
+                                                           {BoxType::LETTERS, {KEY_A, KEY_Z}},
+                                                           {BoxType::REDUCED, {KEY_ZERO, KEY_Z}},
+                                                           {BoxType::ALL, {32, 125}}};
 };
 
 class DropDownList: public UIElement{
     private:
         bool state;
-        std::vector<std::string> options;
+        int nOptions;
+        const char* options;
         int currOption;
     public:
-        DropDownList(float x, float y, float width, float height, float thickness, std::vector<std::string> values, int currentOption);
+        DropDownList(float x, float y, float width, float height, float thickness, const char* values, int numOfValues, int currentOption);
         int chosenOption() const;
         void setOption(int option);
         void open();

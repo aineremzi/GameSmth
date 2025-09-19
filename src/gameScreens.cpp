@@ -1,8 +1,10 @@
 #include "../include/raylib.h"
 #include <algorithm>
-#include <vector>
 #include "gameScreens.h"
 #include "gui.h"
+
+#define MENUBUTTONSNUM 4
+#define SETTINGSNUM 5
 
 void DrawTitle(int screenWidth, int screenHeight){
     //Initializating variables
@@ -31,18 +33,18 @@ int DrawMenu(int screenWidth, int screenHeight){
     int buttonHeight = screenHeight/12;
     int buttonFontSize = std::min(buttonWidth/10, buttonHeight/2);
     float buttonVerticalPos = screenWidth*(bxm-1)/(2*bxm);
-    std::vector<Button> buttons = {{buttonVerticalPos, screenHeight*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+    Button buttons[MENUBUTTONSNUM] = {{buttonVerticalPos, screenHeight*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
                             {buttonVerticalPos, screenHeight*4/6.0f, (float)buttonWidth, (float)buttonHeight}, 
                             {buttonVerticalPos, screenHeight*5/6.0f, (float)buttonWidth, (float)buttonHeight},
                             {buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
-    std::vector<const char*> buttonTexts = {"Play", "Settings", "Quit", "Rules"};
+    const char* buttonTexts[MENUBUTTONSNUM] = {"Play", "Settings", "Quit", "Rules"};
     
     //Drawing menu
     ClearBackground(BLACK);
     DrawText("Dance on the boat", screenWidth/2 + titleOffset, screenHeight/12, titleFontSize, WHITE);
     
     //Drawing buttons
-    for (int i = 0; i < buttons.size(); i++){
+    for (int i = 0; i < MENUBUTTONSNUM; i++){
         float lineThickness = buttonWidth/100;
         if (buttons[i].pressed()){
             buttons[i].drawButton(LIGHTGRAY, buttonTexts[i], buttonFontSize, WHITE);
@@ -75,7 +77,7 @@ void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
     int settingsFontSize = std::min(screenHeight, screenWidth)/20;
     int settingsXCoord = screenWidth/3;
     int settingsYCoef = 10;
-    std::vector<std::pair<const char*, UIElement*>> settingsNames = {{"Resolution", {}}, 
+    std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", {}}, 
                                                                      {"Fullscreen", {}}, 
                                                                      {"Limit FPS", {}},
                                                                      {"Vsync", CheckBox{settingsXCoord, 0, 50, 50, 10, settings.getVsync()}},
@@ -85,7 +87,7 @@ void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
     ClearBackground(BLACK);
     DrawText("Settings", screenWidth/2 + titleOffset, titleYCoords, titleFontSize, WHITE);
     
-    for (int i = 0; i < settingsNames.size(); i++){
+    for (int i = 0; i < SETTINGSNUM; i++){
         int settingsTextOffset = -MeasureText(settingsNames[i].first, settingsFontSize)/2;
         DrawText(settingsNames[i].first, settingsXCoord + settingsTextOffset, (screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize, settingsFontSize, WHITE);
     }

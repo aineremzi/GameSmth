@@ -70,13 +70,17 @@ void CheckBox::flip(){
 
 
 //ValueBox class realization
-ValueBox::ValueBox(float x, float y, float width, float height, float thickness, std::string value):thick(thickness), _value(value){
+ValueBox::ValueBox(float x, float y, float width, float height, float thickness, std::string value, BoxType boxType):thick(thickness), _value(value), type(boxType){
     element.x = x;
     element.y = y;
     element.width = width;
     element.height = height;
 }
 void ValueBox::draw(const Color color) const{
+    if(!state){
+        DrawRectangleRec(element, color);
+        int textSize = element.height/3;
+        Vector2 textPosition = {element.x + element.width/2.0f - MeasureText(_value.c_str(), textSize), element.y + element.height/2.0f};
 
 }
 void ValueBox::setValue(std::string value){
@@ -85,11 +89,22 @@ void ValueBox::setValue(std::string value){
 std::string ValueBox::getValue() const{
     return _value;
 }
-
+bool ValueBox::isActive(){
+    return state;
+}
+void ValueBox::activate(){
+    state = true;
+}
+void ValueBox::deactivate(){
+    state = false;
+}
+void ValueBox::switchState(){
+    state = !state;
+}
 
 
 //DropDownList class realization
-DropDownList::DropDownList(float x, float y, float width, float height, float thickness, std::vector<std::string> values, int currentOption):options(values), currOption(currentOption), state(false){
+DropDownList::DropDownList(float x, float y, float width, float height, float thickness, const char* values, int numOfValues, int currentOption):options(values), nOptions(numOfValues), currOption(currentOption), state(false){
     element.x = x;
     element.y = y;
     element.width = width;

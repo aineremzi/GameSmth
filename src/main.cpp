@@ -89,7 +89,7 @@ int main()
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
                 break;
             case 3:
-                DrawSettingsMenu(screenW, screenH);
+                DrawSettingsMenu(screenW, screenH, currSettings);
                 break;
             case 4:
                 ClearBackground(BLACK);
