@@ -76,6 +76,7 @@ class DropDownList: public UIElement{
         int currOption;
     public:
         DropDownList(float x, float y, float width, float height, float thickness, const char* values, int numOfValues, int currentOption);
+        void draw(const Color color) const override; 
         int chosenOption() const;
         void setOption(int option);
         void open();

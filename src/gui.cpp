@@ -77,11 +77,9 @@ ValueBox::ValueBox(float x, float y, float width, float height, float thickness,
     element.height = height;
 }
 void ValueBox::draw(const Color color) const{
-    if(!state){
         DrawRectangleRec(element, color);
         int textSize = element.height/3;
         Vector2 textPosition = {element.x + element.width/2.0f - MeasureText(_value.c_str(), textSize), element.y + element.height/2.0f};
-
 }
 void ValueBox::setValue(std::string value){
     _value = value;
@@ -127,4 +125,11 @@ void DropDownList::switchState(){
 }
 bool DropDownList::isOpen() const{
     return state;
+}
+void DropDownList::draw(Color color) const{
+    if(!state){
+        
+    }else{
+
+    }
 }
