@@ -59,12 +59,12 @@ int main()
         switch (currState)
         {
             case 0:
-                DrawTitle(screenW, screenH);
+                DrawTitle(currSettings);
                 if (GetTime() >= 1.0f)
                     currState = menu;
                 break;
             case 1:{
-                int buttonChosen = DrawMenu(screenW, screenH);
+                int buttonChosen = DrawMenu(currSettings);
                 switch(buttonChosen){
                     case MENU_PLAY:
                         currState = board;
@@ -89,7 +89,7 @@ int main()
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
                 break;
             case 3:
-                DrawSettingsMenu(screenW, screenH, currSettings);
+                DrawSettingsMenu(currSettings);
                 break;
             case 4:
                 ClearBackground(BLACK);

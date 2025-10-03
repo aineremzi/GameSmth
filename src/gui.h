@@ -72,10 +72,11 @@ class DropDownList: public UIElement{
     private:
         bool state;
         int nOptions;
-        const char* options;
+        const char** options;
         int currOption;
+        float thick;
     public:
-        DropDownList(float x, float y, float width, float height, float thickness, const char* values, int numOfValues, int currentOption);
+        DropDownList(float x, float y, float width, float height, float thickness, const char** values, int numOfValues, int currentOption);
         void draw(const Color color) const override; 
         int chosenOption() const;
         void setOption(int option);

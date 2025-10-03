@@ -77,8 +77,8 @@ int Settings::save(){
             case RESOLUTION_HD:
                 oSettings << "Resolution: " << "HD";
                 break;
-            case RESOLUTION_1080I:
-                oSettings << "Resolution: " << "1080I";
+            case RESOLUTION_UXGA:
+                oSettings << "Resolution: " << "UXGA";
                 break;
             case RESOLUTION_VGA:
                 oSettings << "Resolution: " << "VGA";
@@ -152,11 +152,17 @@ void Settings::setFulscreenMode(FullscreenMode mode){
             break;
     }
 }
+void Settings::setVsync(bool state){
+    vSync = state;
+}
+bool Settings::getVsync(){
+    return vSync;
+}
 
 
 ResolutionNames getSettingResolution(std::string value){
-    if (value =="1080I"){
-        return RESOLUTION_1080I;
+    if (value == "UXGA"){
+        return RESOLUTION_UXGA;
     }else if (value == "8K"){
         return RESOLUTION_8K;
     }else if (value == "4K"){

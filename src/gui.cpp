@@ -77,9 +77,10 @@ ValueBox::ValueBox(float x, float y, float width, float height, float thickness,
     element.height = height;
 }
 void ValueBox::draw(const Color color) const{
-        DrawRectangleRec(element, color);
-        int textSize = element.height/3;
-        Vector2 textPosition = {element.x + element.width/2.0f - MeasureText(_value.c_str(), textSize), element.y + element.height/2.0f};
+        DrawRectangleLinesEx(element, thick, color);
+        int textSize = element.height/2;
+        Vector2 textPosition = {element.x + (element.width - MeasureText(_value.c_str(), textSize))/2.0f, element.y + element.height/4.0f};
+        DrawText(_value.c_str(), textPosition.x, textPosition.y, textSize, color);
 }
 void ValueBox::setValue(std::string value){
     _value = value;
@@ -102,7 +103,7 @@ void ValueBox::switchState(){
 
 
 //DropDownList class realization
-DropDownList::DropDownList(float x, float y, float width, float height, float thickness, const char* values, int numOfValues, int currentOption):options(values), nOptions(numOfValues), currOption(currentOption), state(false){
+DropDownList::DropDownList(float x, float y, float width, float height, float thickness, const char** values, int numOfValues, int currentOption):options(values), thick(thickness), nOptions(numOfValues), currOption(currentOption), state(false){
     element.x = x;
     element.y = y;
     element.width = width;
@@ -128,8 +129,21 @@ bool DropDownList::isOpen() const{
 }
 void DropDownList::draw(Color color) const{
     if(!state){
-        
+        DrawRectangleLinesEx(element, thick, color);
+        int fontSize = element.height/2;
+        int buttonTextOffset = -MeasureText(options[currOption], fontSize)/2;
+        int textX = element.x + element.width/2 + buttonTextOffset;
+        int textY = element.y + (element.height-fontSize)/2;
+        DrawText(options[currOption], textX, textY, fontSize, color);
     }else{
-
+        Rectangle temp = {element.x, element.y, element.width, element.height*nOptions};
+        DrawRectangleLinesEx(temp, thick, color);
+        for (size_t i; i < nOptions; i++){
+            int fontSize = element.height/2;
+            int buttonTextOffset = -MeasureText(options[currOption], fontSize)/2;
+            int textX = element.x + element.width/2 + buttonTextOffset;
+            int textY = element.y + (element.height-fontSize)/2 + element.height*i;
+            DrawText(options[currOption], textX, textY, fontSize, color);
+        }
     }
 }

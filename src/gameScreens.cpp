@@ -2,12 +2,15 @@
 #include <algorithm>
 #include "gameScreens.h"
 #include "gui.h"
+#include <string>
 
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
 
-void DrawTitle(int screenWidth, int screenHeight){
+void DrawTitle(Settings settings){
     //Initializating variables
+    int screenHeight = settings.getResolution().y;
+    int screenWidth = settings.getResolution().x;
     float dist = 1 / 10.0f;
     float screenMiddle = screenHeight / 2.0f;
     float yt = screenMiddle - dist * screenHeight;
@@ -23,8 +26,10 @@ void DrawTitle(int screenWidth, int screenHeight){
 
 
 
-int DrawMenu(int screenWidth, int screenHeight){
+int DrawMenu(Settings settings){
     //initializating variables
+    int screenHeight = settings.getResolution().y;
+    int screenWidth = settings.getResolution().x;
     int returnValue = -1;
     int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Dance on the boat", titleFontSize)/2;
@@ -68,8 +73,11 @@ int DrawMenu(int screenWidth, int screenHeight){
 
 
 
-void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
+void DrawSettingsMenu(Settings settings){
     //Initializing variables
+    int screenHeight = settings.getResolution().y;
+    int screenWidth = settings.getResolution().x;
+
     int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Settings", titleFontSize)/2;
     int titleYCoords = screenHeight/12;
@@ -77,11 +85,16 @@ void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
     int settingsFontSize = std::min(screenHeight, screenWidth)/20;
     int settingsXCoord = screenWidth/3;
     int settingsYCoef = 10;
-    std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", {}}, 
-                                                                     {"Fullscreen", {}}, 
-                                                                     {"Limit FPS", {}},
-                                                                     {"Vsync", CheckBox{settingsXCoord, 0, 50, 50, 10, settings.getVsync()}},
-                                                                     {"Sound effects", {}}};
+
+    float dropDownListWidth = screenWidth/10.0f;
+    float lineThickness = std::min(dropDownListWidth, (float)settingsFontSize)/5.0f;
+    const char* resolutions[] = {"7680x4320", "3840x2160", "2560x1440", "1920x1080", "1280x720", "1920x1200", "2560x1600", "640x480", "800x600", "1024x768", "1600x1200"};
+    const char* FSModes[] = {"Windowed", "Borderless", "Fullscreen"};
+    std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, resolutions, 11, static_cast<int>(settings.getResolutionName())}}, 
+                                                                     {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
+                                                                     {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
+                                                                     {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
+                                                                     {"Sound effects", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
     
     //Begin Drawing
     ClearBackground(BLACK);
@@ -90,5 +103,14 @@ void DrawSettingsMenu(int screenWidth, int screenHeight, Settings settings){
     for (int i = 0; i < SETTINGSNUM; i++){
         int settingsTextOffset = -MeasureText(settingsNames[i].first, settingsFontSize)/2;
         DrawText(settingsNames[i].first, settingsXCoord + settingsTextOffset, (screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize, settingsFontSize, WHITE);
+        auto option = settingsNames[i].second;
+        if (option->hovered()){
+            option->draw(WHITE);
+            if (option->pressed()){
+                
+            }
+        }else{
+            option->draw(LIGHTGRAY);
+        }
     }
 }
