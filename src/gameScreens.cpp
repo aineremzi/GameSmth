@@ -90,11 +90,11 @@ void DrawSettingsMenu(Settings settings){
     float lineThickness = std::min(dropDownListWidth, (float)settingsFontSize)/5.0f;
     const char* resolutions[] = {"7680x4320", "3840x2160", "2560x1440", "1920x1080", "1280x720", "1920x1200", "2560x1600", "640x480", "800x600", "1024x768", "1600x1200"};
     const char* FSModes[] = {"Windowed", "Borderless", "Fullscreen"};
-    std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, resolutions, 11, static_cast<int>(settings.getResolutionName())}}, 
-                                                                     {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
-                                                                     {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
-                                                                     {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
-                                                                     {"Sound effects", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
+    static std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, resolutions, 11, static_cast<int>(settings.getResolutionName())}}, 
+                                                                            {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
+                                                                            {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
+                                                                            {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
+                                                                            {"Sound effects", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
     
     //Begin Drawing
     ClearBackground(BLACK);
@@ -104,13 +104,32 @@ void DrawSettingsMenu(Settings settings){
         int settingsTextOffset = -MeasureText(settingsNames[i].first, settingsFontSize)/2;
         DrawText(settingsNames[i].first, settingsXCoord + settingsTextOffset, (screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize, settingsFontSize, WHITE);
         auto option = settingsNames[i].second;
+        float outlineThickness = option->getWidth()/100.0f;
         if (option->hovered()){
-            option->draw(WHITE);
-            if (option->pressed()){
-                
+            if (option->released()){
+                if (i == 0 || i == 1){
+                    DropDownList* element = dynamic_cast<DropDownList*>(option);
+                    if (!element->isOpen()){
+                        element->switchState();
+                    }else{element->switchState();}
+                }else if (i == 2){
+                    ValueBox* element = dynamic_cast<ValueBox*>(option);
+                    element->switchState();
+                }else{
+                    CheckBox* element = dynamic_cast<CheckBox*>(option);
+                    element->flip();
+                }
             }
+            option->draw(GRAY);
+            option->drawOutline(BLUE, outlineThickness);
         }else{
-            option->draw(LIGHTGRAY);
+            option->draw(GRAY);
+            option->drawOutline(DARKGRAY, outlineThickness);
         }
+    }
+    for (int i = 0; i < 2; i++){
+        DropDownList* element = dynamic_cast<DropDownList*>(settingsNames[i].second);
+        if (element->isOpen())
+            element->draw(GRAY);
     }
 }

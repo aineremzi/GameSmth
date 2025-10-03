@@ -1,4 +1,5 @@
 #include "gui.h"
+#include <iostream>
 
 bool UIElement::hovered() const{
     return CheckCollisionPointRec(GetMousePosition(), element);
@@ -22,6 +23,18 @@ void UIElement::changePosition(float x, float y){
 void UIElement::changePosition(Vector2 coords){
     element.x = coords.x;
     element.y = coords.y;
+}
+float UIElement::getWidth(){
+    return element.width;
+}
+float UIElement::getHeight(){
+    return element.height;
+}
+float UIElement::getX(){
+    return element.x;
+}
+float UIElement::getY(){
+    return element.y;
 }
 
 
@@ -70,17 +83,17 @@ void CheckBox::flip(){
 
 
 //ValueBox class realization
-ValueBox::ValueBox(float x, float y, float width, float height, float thickness, std::string value, BoxType boxType):thick(thickness), _value(value), type(boxType){
+ValueBox::ValueBox(float x, float y, float width, float height, std::string value, BoxType boxType, Color textColor):_value(value), type(boxType), tColor(textColor){
     element.x = x;
     element.y = y;
     element.width = width;
     element.height = height;
 }
 void ValueBox::draw(const Color color) const{
-        DrawRectangleLinesEx(element, thick, color);
+        DrawRectangleRec(element, color);
         int textSize = element.height/2;
         Vector2 textPosition = {element.x + (element.width - MeasureText(_value.c_str(), textSize))/2.0f, element.y + element.height/4.0f};
-        DrawText(_value.c_str(), textPosition.x, textPosition.y, textSize, color);
+        DrawText(_value.c_str(), textPosition.x, textPosition.y, textSize, tColor);
 }
 void ValueBox::setValue(std::string value){
     _value = value;
@@ -103,7 +116,8 @@ void ValueBox::switchState(){
 
 
 //DropDownList class realization
-DropDownList::DropDownList(float x, float y, float width, float height, float thickness, const char** values, int numOfValues, int currentOption):options(values), thick(thickness), nOptions(numOfValues), currOption(currentOption), state(false){
+DropDownList::DropDownList(float x, float y, float width, float height, const char** values, int numOfValues, int currentOption, Color textColor)\
+                                                        :options(values), nOptions(numOfValues), currOption(currentOption), state(false), tColor(textColor){
     element.x = x;
     element.y = y;
     element.width = width;
@@ -129,21 +143,21 @@ bool DropDownList::isOpen() const{
 }
 void DropDownList::draw(Color color) const{
     if(!state){
-        DrawRectangleLinesEx(element, thick, color);
+        DrawRectangleRec(element, color);
         int fontSize = element.height/2;
         int buttonTextOffset = -MeasureText(options[currOption], fontSize)/2;
         int textX = element.x + element.width/2 + buttonTextOffset;
         int textY = element.y + (element.height-fontSize)/2;
-        DrawText(options[currOption], textX, textY, fontSize, color);
+        DrawText(options[currOption], textX, textY, fontSize, tColor);
     }else{
         Rectangle temp = {element.x, element.y, element.width, element.height*nOptions};
-        DrawRectangleLinesEx(temp, thick, color);
-        for (size_t i; i < nOptions; i++){
+        DrawRectangleRec(temp, color);
+        for (size_t i = 0; i < nOptions; i++){
             int fontSize = element.height/2;
-            int buttonTextOffset = -MeasureText(options[currOption], fontSize)/2;
+            int buttonTextOffset = -MeasureText(options[i], fontSize)/2;
             int textX = element.x + element.width/2 + buttonTextOffset;
             int textY = element.y + (element.height-fontSize)/2 + element.height*i;
-            DrawText(options[currOption], textX, textY, fontSize, color);
+            DrawText(options[i], textX, textY, fontSize, tColor);
         }
     }
 }

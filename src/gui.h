@@ -13,6 +13,10 @@ class UIElement{
         virtual void changePosition(float x, float y);
         virtual void changePosition(Vector2 coords);
         virtual void drawOutline(const Color color, float lineThickness) const;
+        virtual float getWidth();
+        virtual float getHeight();
+        virtual float getX();
+        virtual float getY();
         virtual void draw(const Color color) const = 0;
 
 };
@@ -48,7 +52,7 @@ class ValueBox: public UIElement{
             REDUCED,
             ALL
         };
-        ValueBox(float x, float y, float width, float height, float thickness, std::string value, BoxType boxType);
+        ValueBox(float x, float y, float width, float height, std::string value, BoxType boxType = BoxType::ALL, Color textColor = WHITE);
         void draw(const Color color) const override;
         void setValue(std::string value);
         std::string getValue() const;
@@ -58,8 +62,8 @@ class ValueBox: public UIElement{
         void switchState();
     private:
         std::string _value;
-        float thick;
         std::string input;
+        Color tColor;
         bool state;
         BoxType type;
         std::map<BoxType, std::pair<int, int>> typeDesc = {{BoxType::NUMBERS, {KEY_ZERO, KEY_NINE}},
@@ -74,9 +78,9 @@ class DropDownList: public UIElement{
         int nOptions;
         const char** options;
         int currOption;
-        float thick;
+        Color tColor;
     public:
-        DropDownList(float x, float y, float width, float height, float thickness, const char** values, int numOfValues, int currentOption);
+        DropDownList(float x, float y, float width, float height, const char** values, int numOfValues, int currentOption = 0, Color textColor = WHITE);
         void draw(const Color color) const override; 
         int chosenOption() const;
         void setOption(int option);
