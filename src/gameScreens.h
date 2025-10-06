@@ -17,6 +17,6 @@ enum MainMenuButtons{
     MENU_RULES
 };
 
-void DrawTitle(Settings settings);
-int DrawMenu(Settings settings); // Returns id of button chosen, or -1 if none
-void DrawSettingsMenu(Settings settings);
+void DrawTitle(Settings &settings);
+int DrawMenu(Settings &settings); // Returns id of button chosen, or -1 if none
+void DrawSettingsMenu(Settings& settings);

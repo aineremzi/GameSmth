@@ -25,6 +25,7 @@ class Button : public UIElement{
     private:
     public:
         Button() = delete;
+        Button(Rectangle button);
         Button(float x, float y, float width, float height);
         ~Button() = default;
         void drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const;
@@ -37,11 +38,12 @@ class CheckBox: public UIElement{
         bool state;
     public:
         CheckBox() = delete;
+        CheckBox(Rectangle button, float thickness, bool checked =false);
         CheckBox(float x, float y, float width, float height, float thickness, bool checked = false);
         ~CheckBox() = default;
         void draw(const Color color) const override;
         bool isChecked() const;
-        void flip();
+        bool flip();
 };
 
 class ValueBox: public UIElement{
@@ -52,14 +54,19 @@ class ValueBox: public UIElement{
             REDUCED,
             ALL
         };
+        ValueBox() = delete;
+        ValueBox(Rectangle button, std::string value, BoxType boxType = BoxType::ALL, Color color = WHITE);
         ValueBox(float x, float y, float width, float height, std::string value, BoxType boxType = BoxType::ALL, Color textColor = WHITE);
         void draw(const Color color) const override;
         void setValue(std::string value);
         std::string getValue() const;
         bool isActive();
         void activate();
+        std::string getValue();
         void deactivate();
         void switchState();
+        void changeTextColor(const Color textColor);
+        Color getTextColor() const;
     private:
         std::string _value;
         std::string input;
@@ -80,12 +87,38 @@ class DropDownList: public UIElement{
         int currOption;
         Color tColor;
     public:
+        DropDownList() = delete;
+        DropDownList(Rectangle button, const char** values, int numOfValues, int currentOption = 0, Color textColor = WHITE);
         DropDownList(float x, float y, float width, float height, const char** values, int numOfValues, int currentOption = 0, Color textColor = WHITE);
         void draw(const Color color) const override; 
         int chosenOption() const;
+        int getValue();
         void setOption(int option);
         void open();
         void close();
         void switchState();
         bool isOpen() const;
+        void changeTextColor(const Color textColor);
+        Color getTextColor() const;
+};
+
+class Slider: public UIElement{
+    public:
+        enum SliderPosition{
+            HORIZONTAL = 0,
+            VERTICAL,
+            HORIZONTALREV,
+            VERTICALREV
+        };
+        Slider() = delete;
+        Slider(Rectangle button, float thickness, float value, SliderPosition sliderType = HORIZONTAL);
+        Slider(float x, float y, float width, float height, float thickness, float value, SliderPosition sliderType = HORIZONTAL);
+        void draw(const Color color) const override;
+        float value() const;
+        void setValue(const float newValue);
+        float getValue();
+    private:
+        float _value;
+        float thick;
+        SliderPosition type;
 };

@@ -7,7 +7,7 @@
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
 
-void DrawTitle(Settings settings){
+void DrawTitle(Settings& settings){
     //Initializating variables
     int screenHeight = settings.getResolution().y;
     int screenWidth = settings.getResolution().x;
@@ -26,7 +26,7 @@ void DrawTitle(Settings settings){
 
 
 
-int DrawMenu(Settings settings){
+int DrawMenu(Settings &settings){
     //initializating variables
     int screenHeight = settings.getResolution().y;
     int screenWidth = settings.getResolution().x;
@@ -73,7 +73,7 @@ int DrawMenu(Settings settings){
 
 
 
-void DrawSettingsMenu(Settings settings){
+void DrawSettingsMenu(Settings &settings){
     //Initializing variables
     int screenHeight = settings.getResolution().y;
     int screenWidth = settings.getResolution().x;
@@ -94,7 +94,7 @@ void DrawSettingsMenu(Settings settings){
                                                                             {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
                                                                             {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
                                                                             {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
-                                                                            {"Sound effects", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
+                                                                            {"Sound effects", new Slider{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
     
     //Begin Drawing
     ClearBackground(BLACK);
@@ -115,12 +115,19 @@ void DrawSettingsMenu(Settings settings){
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
                     element->switchState();
-                }else{
+                }else if(i == 3){
                     CheckBox* element = dynamic_cast<CheckBox*>(option);
-                    element->flip();
+                    settings.setVsync(element->flip());
                 }
+            }else if(option->pressed()){
+                option->draw(LIGHTGRAY);
+                if (i == 4){
+                    Slider* element = dynamic_cast<Slider*>(option);
+                    settings.setVolume(element->getValue());
+                }
+            }else{
+                option->draw(GRAY);
             }
-            option->draw(GRAY);
             option->drawOutline(BLUE, outlineThickness);
         }else{
             option->draw(GRAY);

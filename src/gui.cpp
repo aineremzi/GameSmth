@@ -1,5 +1,5 @@
 #include "gui.h"
-#include <iostream>
+#include <algorithm>
 
 bool UIElement::hovered() const{
     return CheckCollisionPointRec(GetMousePosition(), element);
@@ -40,6 +40,12 @@ float UIElement::getY(){
 
 
 //Button class realization
+Button::Button(Rectangle button){
+    element.x = button.x;
+    element.y = button.y;
+    element.width = button.width;
+    element.height = button.height;
+}
 Button::Button(float x, float y, float width, float height){
     element.x = x;
     element.y = y;
@@ -76,13 +82,20 @@ void CheckBox::draw(Color color) const{
     }
 }
 bool CheckBox::isChecked() const{return state;}
-void CheckBox::flip(){
+bool CheckBox::flip(){
     state = !state;
+    return state;
 }
 
 
 
 //ValueBox class realization
+ValueBox::ValueBox(Rectangle button, std::string value, BoxType boxType, Color textColor):_value(value), type(boxType), tColor(textColor){
+    element.x = button.x;
+    element.y = button.y;
+    element.width = button.width;
+    element.height = button.height;
+}
 ValueBox::ValueBox(float x, float y, float width, float height, std::string value, BoxType boxType, Color textColor):_value(value), type(boxType), tColor(textColor){
     element.x = x;
     element.y = y;
@@ -113,9 +126,22 @@ void ValueBox::deactivate(){
 void ValueBox::switchState(){
     state = !state;
 }
+void ValueBox::changeTextColor(const Color textColor){
+    tColor = textColor;
+}
+Color ValueBox::getTextColor() const{
+    return tColor;
+}
 
 
 //DropDownList class realization
+DropDownList::DropDownList(Rectangle button, const char** values, int numOfValues, int currentOption, Color textColor)\
+                                                        :options(values), nOptions(numOfValues), currOption(currentOption), state(false), tColor(textColor){
+    element.x = button.x;
+    element.y = button.y;
+    element.width = button.width;
+    element.height = button.height;
+}
 DropDownList::DropDownList(float x, float y, float width, float height, const char** values, int numOfValues, int currentOption, Color textColor)\
                                                         :options(values), nOptions(numOfValues), currOption(currentOption), state(false), tColor(textColor){
     element.x = x;
@@ -160,4 +186,73 @@ void DropDownList::draw(Color color) const{
             DrawText(options[i], textX, textY, fontSize, tColor);
         }
     }
+}
+void DropDownList::changeTextColor(const Color textColor){
+    tColor = textColor;
+}
+Color DropDownList::getTextColor() const{
+    return tColor;
+}
+int DropDownList::getValue(){
+    for (int i = 0; i < nOptions; i++){
+        
+    }
+}
+
+//Slider class realisation
+Slider::Slider(Rectangle button, float thickness, float value, SliderPosition sliderType): _value(value), thick(thickness), type(sliderType){
+    element.x = button.x;
+    element.y = button.y;
+    element.width = button.width;
+    element.height = button.height;
+}
+Slider::Slider(float x, float y, float width, float height, float thickness, float value, SliderPosition sliderType): _value(value), thick(thickness), type(sliderType){
+    element.x = x;
+    element.y = y;
+    element.width = width;
+    element.height = height;
+}
+void Slider::draw(const Color color) const{
+    DrawRectangleLinesEx(element, thick, color);
+    Rectangle temp = element;
+    switch(type){
+        case HORIZONTAL:
+            temp.width*=_value;
+            break;
+        case VERTICAL:
+            temp.height*=_value;
+            temp.y += element.height - temp.height;
+            break;
+        case HORIZONTALREV:
+            temp.width*=_value;
+            temp.x += element.width - temp.width;
+            break;
+        case VERTICALREV:
+            temp.height*=_value;
+            break;
+    }
+    DrawRectangleRec(temp, color);
+}
+float Slider::value() const{
+    return _value;
+}
+void Slider::setValue(const float newValue){
+    _value = newValue;
+}
+float Slider::getValue(){
+    switch(type){
+        case HORIZONTAL:
+            _value = std::max((float)0.0, std::min((float)1.0 ,(GetMousePosition().x - element.x)/element.width));
+            return _value;
+        case VERTICAL:
+            _value = std::max((float)0.0, std::min((float)1.0 ,(float)1.0 - (GetMousePosition().y - element.y)/element.width));
+            return _value;
+        case HORIZONTALREV:
+            _value = std::max((float)0.0, std::min((float)1.0 ,(float)1.0 - ((GetMousePosition().x - element.x)/element.width)));
+            return _value;
+        case VERTICALREV:
+            _value = std::max((float)0.0, std::min((float)1.0 ,(GetMousePosition().y - element.y)/element.height));
+            return _value;
+        }
+        return -1;
 }
