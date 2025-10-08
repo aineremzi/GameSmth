@@ -100,6 +100,9 @@ class DropDownList: public UIElement{
         bool isOpen() const;
         void changeTextColor(const Color textColor);
         Color getTextColor() const;
+        void drawOption(Color color, Color highlightColor = WHITE);
+        void drawOption(Color color, float borderSize, Color highlightColor = WHITE);
+        void drawOption(Color color,  float borderSize, Color highlightColor, Color sHighlightColor);
 };
 
 class Slider: public UIElement{

@@ -195,7 +195,61 @@ Color DropDownList::getTextColor() const{
 }
 int DropDownList::getValue(){
     for (int i = 0; i < nOptions; i++){
-        
+        Button temp = {element};
+        temp.changePosition(element.x, element.y+element.height);
+        if(temp.clicked()){
+            state = !state;
+            currOption = i;
+            return i;
+        }
+    }
+    return -1;
+}
+void DropDownList::drawOption(Color color, Color highlightColor){
+    if(state){
+        Button tempB(element);
+        for (size_t i = 0; i < nOptions; i++){
+            tempB.changePosition(element.x, element.y+element.height*i);
+            if (tempB.hovered())
+                tempB.draw(highlightColor);
+            int fontSize = element.height/2;
+            int buttonTextOffset = -MeasureText(options[i], fontSize)/2;
+            int textX = element.x + element.width/2 + buttonTextOffset;
+            int textY = element.y + (element.height-fontSize)/2 + element.height*i;
+            DrawText(options[i], textX, textY, fontSize, tColor);
+        }
+    }
+}
+void DropDownList::drawOption(Color color, float borderSize, Color highlightColor){
+    if(state){
+        Button tempB(element);
+        for (size_t i = 0; i < nOptions; i++){
+            tempB.changePosition(element.x, element.y+element.height*i);
+            if (tempB.hovered())
+                tempB.drawOutline(highlightColor, borderSize);
+            int fontSize = element.height/2;
+            int buttonTextOffset = -MeasureText(options[i], fontSize)/2;
+            int textX = element.x + element.width/2 + buttonTextOffset;
+            int textY = element.y + (element.height-fontSize)/2 + element.height*i;
+            DrawText(options[i], textX, textY, fontSize, tColor);
+        }
+    }
+}
+void DropDownList::drawOption(Color color, float borderSize, Color highlightColor, Color sHighlightColor){
+    if(state){
+        Button tempB(element);
+        for (size_t i = 0; i < nOptions; i++){
+            tempB.changePosition(element.x, element.y+element.height*i);
+            if (tempB.hovered()){
+                tempB.draw(highlightColor);
+                tempB.drawOutline(sHighlightColor, borderSize);
+            }
+            int fontSize = element.height/2;
+            int buttonTextOffset = -MeasureText(options[i], fontSize)/2;
+            int textX = element.x + element.width/2 + buttonTextOffset;
+            int textY = element.y + (element.height-fontSize)/2 + element.height*i;
+            DrawText(options[i], textX, textY, fontSize, tColor);
+        }
     }
 }
 

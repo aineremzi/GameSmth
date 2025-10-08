@@ -111,7 +111,15 @@ void DrawSettingsMenu(Settings &settings){
                     DropDownList* element = dynamic_cast<DropDownList*>(option);
                     if (!element->isOpen()){
                         element->switchState();
-                    }else{element->switchState();}
+                    }else{
+                        if (i == 0){
+                            if (element->chosenOption() != -1)
+                                settings.setResolution(static_cast<ResolutionNames>(element->getValue()));
+                        }else{
+                            if (element->chosenOption() != -1)
+                                settings.setFulscreenMode(static_cast<FullscreenMode>(element->getValue()));
+                        }
+                    }
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
                     element->switchState();
@@ -137,6 +145,6 @@ void DrawSettingsMenu(Settings &settings){
     for (int i = 0; i < 2; i++){
         DropDownList* element = dynamic_cast<DropDownList*>(settingsNames[i].second);
         if (element->isOpen())
-            element->draw(GRAY);
+            element->drawOption(GRAY, element->getWidth()/100.0f, LIGHTGRAY, BLUE);
     }
 }
