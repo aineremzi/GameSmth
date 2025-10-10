@@ -3,6 +3,7 @@
 #include "gameScreens.h"
 #include "gui.h"
 #include <string>
+#include <iostream>
 
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
@@ -75,6 +76,7 @@ int DrawMenu(Settings &settings){
 
 void DrawSettingsMenu(Settings &settings){
     //Initializing variables
+    static Settings tempSettings = settings;
     int screenHeight = settings.getResolution().y;
     int screenWidth = settings.getResolution().x;
 
@@ -95,6 +97,14 @@ void DrawSettingsMenu(Settings &settings){
                                                                             {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
                                                                             {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
                                                                             {"Sound effects", new Slider{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
+    for (int i = 0; i < SETTINGSNUM; i++){
+        settingsNames[i].second->changePosition({settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize});
+        if (i != 3)
+            settingsNames[i].second->changeSize(dropDownListWidth, (float)settingsFontSize);
+        else
+            settingsNames[i].second->changeSize((float)settingsFontSize, (float)settingsFontSize);
+    }
+    
     
     //Begin Drawing
     ClearBackground(BLACK);
@@ -111,14 +121,6 @@ void DrawSettingsMenu(Settings &settings){
                     DropDownList* element = dynamic_cast<DropDownList*>(option);
                     if (!element->isOpen()){
                         element->switchState();
-                    }else{
-                        if (i == 0){
-                            if (element->chosenOption() != -1)
-                                settings.setResolution(static_cast<ResolutionNames>(element->getValue()));
-                        }else{
-                            if (element->chosenOption() != -1)
-                                settings.setFulscreenMode(static_cast<FullscreenMode>(element->getValue()));
-                        }
                     }
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
@@ -144,7 +146,23 @@ void DrawSettingsMenu(Settings &settings){
     }
     for (int i = 0; i < 2; i++){
         DropDownList* element = dynamic_cast<DropDownList*>(settingsNames[i].second);
-        if (element->isOpen())
+        if (element->isOpen()){
+            element->draw(GRAY);
             element->drawOption(GRAY, element->getWidth()/100.0f, LIGHTGRAY, BLUE);
+            auto temp = element->getValue();
+            // std::cout<<temp;
+            if (temp != -1){
+                switch(i){
+                    case 0:
+                        settings.setResolution(static_cast<ResolutionNames>(element->chosenOption()));
+                        settings.initResolution();
+                        break;
+                    case 1:
+                        settings.setFulscreenMode(static_cast<FullscreenMode>(element->chosenOption()));
+                        settings.initFSMode();
+                        break;
+                }
+            }
+        }
     }
 }

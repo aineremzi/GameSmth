@@ -36,7 +36,14 @@ float UIElement::getX(){
 float UIElement::getY(){
     return element.y;
 }
-
+void UIElement::changeSize(float x, float y){
+    element.width = x;
+    element.height = y;
+}
+void UIElement::changeSize(Vector2 coords){
+    element.width = coords.x;
+    element.height = coords.y;
+}
 
 
 //Button class realization
@@ -196,10 +203,10 @@ Color DropDownList::getTextColor() const{
 int DropDownList::getValue(){
     for (int i = 0; i < nOptions; i++){
         Button temp = {element};
-        temp.changePosition(element.x, element.y+element.height);
-        if(temp.clicked()){
-            state = !state;
+        temp.changePosition(element.x, element.y+element.height*i);
+        if (temp.pressed()){
             currOption = i;
+            state = !state;
             return i;
         }
     }

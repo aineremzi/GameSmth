@@ -47,11 +47,12 @@ int main()
                 break;
         }
 
-        if (IsKeyPressed(KEY_F11))
+        if (IsKeyPressed(KEY_F11)){
             if (currSettings.getFullscreenMode() == WINDOWED)
                 currSettings.setFulscreenMode(BORDERLESS);
-            else
+            }else{
                 currSettings.setFulscreenMode(WINDOWED);
+            }
 
         BeginDrawing();
         if (drawFPS)

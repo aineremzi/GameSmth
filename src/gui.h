@@ -12,6 +12,8 @@ class UIElement{
         virtual bool clicked() const;
         virtual void changePosition(float x, float y);
         virtual void changePosition(Vector2 coords);
+        virtual void changeSize(float x, float y);
+        virtual void changeSize(Vector2 coords);
         virtual void drawOutline(const Color color, float lineThickness) const;
         virtual float getWidth();
         virtual float getHeight();

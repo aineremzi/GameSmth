@@ -51,8 +51,14 @@ class Settings{
         int fpsLimit;
     public:
         Settings();
+        Settings(const Settings& other);
+        Settings& operator=(const Settings& other);
+        Settings(Settings&& other);
+        Settings& operator=(const Settings&& other);
         ~Settings() = default;
         void init();
+        void initResolution();
+        void initFSMode();
         int save();
         Vector2 getResolution();
         ResolutionNames getResolutionName();

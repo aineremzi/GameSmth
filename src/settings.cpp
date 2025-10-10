@@ -4,18 +4,20 @@ Settings::Settings(){
     std::ifstream iSettings("Settings.pref");
     if(iSettings){
         for (std::string line; getline(iSettings, line);){
-            std::string title = line.substr(0, line.find(':'));
-            line = line.substr(line.find(':')+2);
-            if (title == "Resolution"){
-                resolution = getSettingResolution(line);
-            }else if (title == "Fullscreen"){
-                fsMode = getSettingFullscreen(line);
-            }else if (title == "Vsync"){
-                vSync = getSettingVsync(line);
-            }else if (title == "FPS"){
-                fpsLimit = getSettingFPS(line);
-            }else if (title == "Volume"){
-                SFXVolume =getSettingVolume(line);
+            if (line.length() > 0){
+                std::string title = line.substr(0, line.find(':'));
+                line = line.substr(line.find(':')+2);
+                if (title == "Resolution"){
+                    resolution = getSettingResolution(line);
+                }else if (title == "Fullscreen"){
+                    fsMode = getSettingFullscreen(line);
+                }else if (title == "Vsync"){
+                    vSync = getSettingVsync(line);
+                }else if (title == "FPS"){
+                    fpsLimit = getSettingFPS(line);
+                }else if (title == "Volume"){
+                    SFXVolume =getSettingVolume(line);
+                }
             }
         }
         iSettings.close();
@@ -57,6 +59,31 @@ void Settings::init(){
             break;
     }
     setVolume(SFXVolume); //Setting volume
+}
+void Settings::initFSMode(){
+    switch(fsMode){ //Setting fullscreen mode
+        case WINDOWED:
+            if(IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            else if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+        case BORDERLESS:
+            if(IsWindowState(FLAG_FULLSCREEN_MODE))
+                ClearWindowState(FLAG_FULLSCREEN_MODE);
+            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            break;
+        case FULLSCREEN:
+            if (IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
+                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            if (!IsWindowState(FLAG_FULLSCREEN_MODE))
+                SetWindowState(FLAG_FULLSCREEN_MODE);
+            break;
+    }
+}
+void Settings::initResolution(){
+    SetWindowSize(Resolutions[resolution].x, Resolutions[resolution].y); 
 }
 int Settings::save(){
     std::ofstream oSettings("Settings.pref", std::ios_base::trunc);
@@ -231,4 +258,25 @@ FullscreenMode getSettingFullscreen(std::string value){
         return DEFAULT_FULLSCREEN;
     }
 }
-
+Settings::Settings(const Settings& other):resolution(other.resolution), fsMode(other.fsMode), vSync(other.vSync), SFXVolume(other.SFXVolume), fpsLimit(other.fpsLimit){}
+Settings& Settings::operator=(const Settings& other){
+    if (this == &other)
+        return *this;
+    resolution = other.resolution;
+    fsMode = other.fsMode;
+    vSync = other.vSync;
+    SFXVolume = other.SFXVolume;
+    fpsLimit = other.fpsLimit;
+    return *this;
+}
+Settings::Settings(Settings&& other):resolution(std::move(other.resolution)), fsMode(std::move(other.fsMode)), vSync(std::move(other.vSync)), SFXVolume(std::move(other.SFXVolume)), fpsLimit(std::move(other.fpsLimit)){}
+Settings& Settings::operator=(const Settings&& other){
+    if (this == &other)
+        return *this;
+    resolution = std::move(other.resolution);
+    fsMode = std::move(other.fsMode);
+    vSync = std::move(other.vSync);
+    SFXVolume = std::move(other.SFXVolume);
+    fpsLimit = std::move(other.fpsLimit);
+    return *this;
+}
