@@ -57,8 +57,6 @@ class Settings{
         Settings& operator=(const Settings&& other);
         ~Settings() = default;
         void init();
-        void initResolution();
-        void initFSMode();
         int save();
         Vector2 getResolution();
         ResolutionNames getResolutionName();

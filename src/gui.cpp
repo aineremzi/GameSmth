@@ -139,6 +139,21 @@ void ValueBox::changeTextColor(const Color textColor){
 Color ValueBox::getTextColor() const{
     return tColor;
 }
+int ValueBox::getKey(){
+    int key = GetCharPressed();
+    while (key > 0){
+        if(key == KEY_ENTER){
+            return KEY_ENTER;
+        }else if (key == KEY_BACKSPACE){
+            if (_value.length() != 0)
+                _value.pop_back();
+        }
+        if (key >= limits[type].first && key <= limits[type].second){
+            _value.push_back((char)key);
+        }
+    }
+    return key;
+}
 
 
 //DropDownList class realization
@@ -204,7 +219,7 @@ int DropDownList::getValue(){
     for (int i = 0; i < nOptions; i++){
         Button temp = {element};
         temp.changePosition(element.x, element.y+element.height*i);
-        if (temp.pressed()){
+        if (temp.clicked()){
             currOption = i;
             state = !state;
             return i;

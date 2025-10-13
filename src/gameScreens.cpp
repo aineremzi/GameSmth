@@ -124,7 +124,15 @@ void DrawSettingsMenu(Settings &settings){
                     }
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
-                    element->switchState();
+                    if(element->isActive()){
+                        element->switchState();
+                    }else{
+                        if (element->getKey() == KEY_ENTER){
+                            std::cout << "Ready";
+                            element->switchState();
+                            settings.setFPS(std::stoi(element->getValue()));
+                        }
+                    }
                 }else if(i == 3){
                     CheckBox* element = dynamic_cast<CheckBox*>(option);
                     settings.setVsync(element->flip());
@@ -155,11 +163,9 @@ void DrawSettingsMenu(Settings &settings){
                 switch(i){
                     case 0:
                         settings.setResolution(static_cast<ResolutionNames>(element->chosenOption()));
-                        settings.initResolution();
                         break;
                     case 1:
                         settings.setFulscreenMode(static_cast<FullscreenMode>(element->chosenOption()));
-                        settings.initFSMode();
                         break;
                 }
             }

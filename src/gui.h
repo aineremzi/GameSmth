@@ -64,12 +64,16 @@ class ValueBox: public UIElement{
         std::string getValue() const;
         bool isActive();
         void activate();
-        std::string getValue();
         void deactivate();
         void switchState();
         void changeTextColor(const Color textColor);
         Color getTextColor() const;
+        int getKey();
     private:
+        std::map<BoxType, std::pair<int,int>> limits{{BoxType::NUMBERS, {48, 57}},
+                                                     {BoxType::LETTERS, {65, 90}},
+                                                     {BoxType::REDUCED, {32, 125}},
+                                                     {BoxType::ALL, {0, 348}}};
         std::string _value;
         std::string input;
         Color tColor;
