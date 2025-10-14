@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 SRC=src/main.cpp src/gui.cpp src/gameScreens.cpp
+=======
+SRC=src/main.cpp src/gui.cpp src/gameScreens.cpp src/settings.cpp
+>>>>>>> main
 OUTPUT=main
 
 win:

@@ -1,40 +1,45 @@
 #include "../include/raylib.h"
 #include "gameScreens.h"
 #include "gui.h"
+#include "settings.h"
 #include <iostream>
 #include <vector>
+
+#define TITLE "Dance on the boat"
 
 int main()
 {
     // Game window initialization
-    std::cout << GetCurrentMonitor() << std::endl;
-    InitWindow(800, 600, "Dance on the boat");
+    Settings currSettings;
+    InitWindow(currSettings.getResolution()[0], currSettings.getResolution()[1], TITLE);
+    BeginDrawing();
+    DrawTitle(currSettings);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    int rRate = GetMonitorRefreshRate(0);
-    SetTargetFPS(rRate);
+    currSettings.init();
 
-    // system parametrs
-    
+    bool drawFPS = false;
 
     enum GameStates
     {
-        title = 0,
-        menu,
+        menu =0,
         board,
         settings,
         rules,
         quit
     };
-    GameStates currState = title;
+    GameStates currState = menu;
 
-    std::vector<GameStates>rand{title,menu,board,settings,rules,quit};
-
+    std::vector<GameStates>rand{menu,board,settings,rules,quit};
+    
+    EndDrawing();
     // Game loop
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && currState != quit)
     {
-        int screenH = GetScreenHeight();
-        int screenW = GetScreenWidth();
+        currSettings.setResolution({GetScreenWidth(), GetScreenHeight()});
      
+        if (IsKeyPressed(KEY_F3))
+            drawFPS = !drawFPS;
+
         switch (currState){
             case 1:
                 SetExitKey(GetRandomValue(KEY_ZERO, KEY_NINE));
@@ -46,34 +51,45 @@ int main()
                 break;
         }
 
-        if (IsKeyPressed(KEY_F11))
-            if (!IsWindowState(FLAG_BORDERLESS_WINDOWED_MODE))
-                SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
-            else
-                ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+        if (IsKeyPressed(KEY_F11)){
+            if (currSettings.getFullscreenMode() == WINDOWED){
+                currSettings.setFulscreenMode(BORDERLESS);
+            }else{
+                currSettings.setFulscreenMode(WINDOWED);
+            }
+        }
 
         BeginDrawing();
-        DrawFPS(0, 0);
-        switch (currState)
-        {
-            case 0:
-                DrawTitle(screenW, screenH);
-                if (GetTime() >= 1.0f)
-                    currState = menu;
-                break;
-            case 1:{
-                int buttonChosen = DrawMenu(screenW, screenH);
-                if (buttonChosen != -1){
-                    currState = rand[GetRandomValue(0, 5)];
+        if (drawFPS)
+            DrawFPS(0, 0);
+        switch (currState){
+            case 0:{
+                int buttonChosen = DrawMenu(currSettings);
+                switch(buttonChosen){
+                    case MENU_PLAY:
+                        currState = board;
+                        break;
+                    case MENU_RULES:
+                            currState = rules;
+                            break;    
+                    case MENU_SETTINGS:{
+                        currState = settings;
+                        break;
+                    }
+                    case MENU_QUIT:
+                        currState = quit;
+                        break;
+                    default:
+                        break;
                 }
                 break;
             }
-            case 2:
+            case 1:
                 ClearBackground(BLACK);
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
                 break;
-            case 3:
-                DrawSettingsMenu(screenW, screenH);
+            case 2:
+                DrawSettingsMenu(currSettings);
                 break;
             case 4:
                 ClearBackground(BLACK);
@@ -85,4 +101,6 @@ int main()
         }
         EndDrawing();
     }
+
+    currSettings.save();
 }
