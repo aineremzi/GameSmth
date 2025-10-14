@@ -10,8 +10,8 @@
 
 void DrawTitle(Settings& settings){
     //Initializating variables
-    int screenHeight = settings.getResolution().y;
-    int screenWidth = settings.getResolution().x;
+    int screenHeight = settings.getResolution()[1];
+    int screenWidth = settings.getResolution()[0];
     float dist = 1 / 10.0f;
     float screenMiddle = screenHeight / 2.0f;
     float yt = screenMiddle - dist * screenHeight;
@@ -29,8 +29,8 @@ void DrawTitle(Settings& settings){
 
 int DrawMenu(Settings &settings){
     //initializating variables
-    int screenHeight = settings.getResolution().y;
-    int screenWidth = settings.getResolution().x;
+    int screenHeight = settings.getResolution()[1];
+    int screenWidth = settings.getResolution()[0];
     int returnValue = -1;
     int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Dance on the boat", titleFontSize)/2;
@@ -77,8 +77,8 @@ int DrawMenu(Settings &settings){
 void DrawSettingsMenu(Settings &settings){
     //Initializing variables
     static Settings tempSettings = settings;
-    int screenHeight = settings.getResolution().y;
-    int screenWidth = settings.getResolution().x;
+    int screenHeight = settings.getResolution()[1];
+    int screenWidth = settings.getResolution()[0];
 
     int titleFontSize = screenWidth/10;
     int titleOffset = -MeasureText("Settings", titleFontSize)/2;
@@ -92,7 +92,7 @@ void DrawSettingsMenu(Settings &settings){
     float lineThickness = std::min(dropDownListWidth, (float)settingsFontSize)/5.0f;
     const char* resolutions[] = {"7680x4320", "3840x2160", "2560x1440", "1920x1080", "1280x720", "1920x1200", "2560x1600", "640x480", "800x600", "1024x768", "1600x1200"};
     const char* FSModes[] = {"Windowed", "Borderless", "Fullscreen"};
-    static std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, resolutions, 11, static_cast<int>(settings.getResolutionName())}}, 
+    static std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, resolutions, 11, 0}}, 
                                                                             {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
                                                                             {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
                                                                             {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
@@ -126,15 +126,16 @@ void DrawSettingsMenu(Settings &settings){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
                     if(!element->isActive()){
                         element->switchState();
-                        HideCursor();
-                        DisableCursor();
+                        // HideCursor();
+                        // DisableCursor();
                     }else{
                         std::cout << "Ready";
                         if (element->getKey() == KEY_ENTER){
                             element->deactivate();
                             EnableCursor();
                             ShowCursor();
-                            settings.setFPS(std::stoi(element->getValue()));
+                            int nfps = std::stoi(element->getValue());
+                            settings.setFPS(nfps);
                         }
                     }
                 }else if(i == 3){
@@ -165,10 +166,10 @@ void DrawSettingsMenu(Settings &settings){
             if (temp != -1){
                 switch(i){
                     case 0:
-                        settings.setResolution(static_cast<ResolutionNames>(element->chosenOption()));
+                        // settings.setResolution();
                         break;
                     case 1:
-                        settings.setFulscreenMode(static_cast<FullscreenMode>(element->chosenOption()));
+                        // settings.setFulscreenMode();
                         break;
                 }
             }

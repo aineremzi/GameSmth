@@ -10,7 +10,9 @@ int main()
 {
     // Game window initialization
     Settings currSettings;
-    InitWindow(currSettings.getResolution().x, currSettings.getResolution().y, TITLE);
+    InitWindow(currSettings.getResolution()[0], currSettings.getResolution()[1], TITLE);
+    BeginDrawing();
+    DrawTitle(currSettings);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     currSettings.init();
 
@@ -18,20 +20,19 @@ int main()
 
     enum GameStates
     {
-        title = 0,
-        menu,
+        menu = 0,
         board,
         settings,
         rules,
         quit
     };
-    GameStates currState = title;
-
+    GameStates currState = menu;
+    
+    EndDrawing();
     // Game loop
     while (!WindowShouldClose() && currState != quit)
     {
-        int screenH = GetScreenHeight();
-        int screenW = GetScreenWidth();
+        currSettings.setResolution({GetScreenWidth(), GetScreenHeight()});
      
         if (IsKeyPressed(KEY_F3))
             drawFPS = !drawFPS;
@@ -48,23 +49,18 @@ int main()
         }
 
         if (IsKeyPressed(KEY_F11)){
-            if (currSettings.getFullscreenMode() == WINDOWED)
+            if (currSettings.getFullscreenMode() == WINDOWED){
                 currSettings.setFulscreenMode(BORDERLESS);
             }else{
                 currSettings.setFulscreenMode(WINDOWED);
             }
+        }
 
         BeginDrawing();
         if (drawFPS)
             DrawFPS(0, 0);
-        switch (currState)
-        {
-            case 0:
-                DrawTitle(currSettings);
-                if (GetTime() >= 1.0f)
-                    currState = menu;
-                break;
-            case 1:{
+        switch (currState){
+            case 0:{
                 int buttonChosen = DrawMenu(currSettings);
                 switch(buttonChosen){
                     case MENU_PLAY:
@@ -85,11 +81,11 @@ int main()
                 }
                 break;
             }
-            case 2:
+            case 1:
                 ClearBackground(BLACK);
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
                 break;
-            case 3:
+            case 2:
                 DrawSettingsMenu(currSettings);
                 break;
             case 4:
