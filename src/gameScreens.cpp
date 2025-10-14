@@ -124,12 +124,16 @@ void DrawSettingsMenu(Settings &settings){
                     }
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
-                    if(element->isActive()){
+                    if(!element->isActive()){
                         element->switchState();
+                        HideCursor();
+                        DisableCursor();
                     }else{
+                        std::cout << "Ready";
                         if (element->getKey() == KEY_ENTER){
-                            std::cout << "Ready";
-                            element->switchState();
+                            element->deactivate();
+                            EnableCursor();
+                            ShowCursor();
                             settings.setFPS(std::stoi(element->getValue()));
                         }
                     }
@@ -158,7 +162,6 @@ void DrawSettingsMenu(Settings &settings){
             element->draw(GRAY);
             element->drawOption(GRAY, element->getWidth()/100.0f, LIGHTGRAY, BLUE);
             auto temp = element->getValue();
-            // std::cout<<temp;
             if (temp != -1){
                 switch(i){
                     case 0:
