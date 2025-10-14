@@ -7,6 +7,7 @@
 
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
+#define G 9.8f
 
 void DrawTitle(Settings& settings){
     //Initializating variables
@@ -115,6 +116,15 @@ void DrawSettingsMenu(Settings &settings){
         DrawText(settingsNames[i].first, settingsXCoord + settingsTextOffset, (screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize, settingsFontSize, WHITE);
         auto option = settingsNames[i].second;
         float outlineThickness = option->getWidth()/100.0f;
+        if (i == 0){
+            static Slider x = {settingsXCoord*2.0f - dropDownListWidth/2.0f + dropDownListWidth, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[0]/(float)GetMonitorWidth(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
+            static Slider y = {settingsXCoord*2.0f + dropDownListWidth/2.0f + dropDownListWidth, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[1]/(float)GetMonitorHeight(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
+            Button save {settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize};
+            x.draw(GRAY);
+            y.draw(GRAY);
+            // settings.setResolution({static_cast<int>(x.getValue()), static_cast<int>(y.getValue())});
+            continue;
+        }
         if (option->hovered()){
             if (option->released()){
                 if (i == 0 || i == 1){
@@ -157,7 +167,7 @@ void DrawSettingsMenu(Settings &settings){
             option->drawOutline(DARKGRAY, outlineThickness);
         }
     }
-    for (int i = 0; i < 2; i++){
+    for (int i = 1; i < 2; i++){
         DropDownList* element = dynamic_cast<DropDownList*>(settingsNames[i].second);
         if (element->isOpen()){
             element->draw(GRAY);

@@ -41,7 +41,7 @@ int main()
             drawFPS = !drawFPS;
 
         switch (currState){
-            case 1:
+            case 0:
                 SetExitKey(GetRandomValue(KEY_ZERO, KEY_NINE));
                 break;
             default:
@@ -67,17 +67,17 @@ int main()
                 int buttonChosen = DrawMenu(currSettings);
                 switch(buttonChosen){
                     case MENU_PLAY:
-                        currState = board;
+                        currState = rand[GetRandomValue(0,4)];
                         break;
                     case MENU_RULES:
-                            currState = rules;
+                            currState = rand[GetRandomValue(0,4)];
                             break;    
                     case MENU_SETTINGS:{
-                        currState = settings;
+                        currState = rand[GetRandomValue(0,4)];
                         break;
                     }
                     case MENU_QUIT:
-                        currState = quit;
+                        currState = rand[GetRandomValue(0,4)];
                         break;
                     default:
                         break;
@@ -91,11 +91,11 @@ int main()
             case 2:
                 DrawSettingsMenu(currSettings);
                 break;
-            case 4:
+            case 3:
                 ClearBackground(BLACK);
                 DrawText("You'll get it, not stupid", 100, 540, 100, WHITE);
                 break;
-            case 5:
+            case 4:
                 CloseWindow();
                 break;
         }
