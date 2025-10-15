@@ -14,7 +14,7 @@ int main()
     InitWindow(currSettings.getResolution()[0], currSettings.getResolution()[1], TITLE);
     BeginDrawing();
     DrawTitle(currSettings);
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    // SetWindowState(FLAG_WINDOW_RESIZABLE);
     currSettings.init();
 
     bool drawFPS = false;

@@ -146,10 +146,12 @@ void DrawSettingsMenu(Settings &settings){
                 save.drawButton(GRAY, "Save", 10, WHITE);
                 save.drawOutline(DARKGRAY, outlineThickness);
             }
-            if (save.released())
+            if (save.released()){
                 // settings.setResolution({800, 600});
+                std::cout << "XXXXXXXXXXXXXXXXXXXXXX\n";
                 settings.setResolution({static_cast<int>(GetMonitorWidth(0)*x.value()), static_cast<int>(GetMonitorHeight(0)*y.value())});
                 // std::cout << GetMonitorWidth(0)*x.value() << " " << GetMonitorHeight(0)*y.value() << std::endl;
+            }
             continue;
         }
         if (option->hovered()){
