@@ -75,6 +75,7 @@ std::array<int, 2> Settings::getResolution() const{
 }
 void Settings::setResolution(std::array<int, 2> newResolution){
     resolution = newResolution;
+    SetWindowSize(resolution[0], resolution[1]);
 }
 int Settings::getFPS() const{
     return fpsLimit;

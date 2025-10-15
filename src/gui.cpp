@@ -313,7 +313,7 @@ float Slider::value() const{
     return _value;
 }
 void Slider::setValue(const float newValue){
-    _value = newValue;
+    _value = std::min(1.0f, std::max(0.0f, newValue));
 }
 float Slider::getValue(){
     switch(type){
@@ -321,7 +321,7 @@ float Slider::getValue(){
             _value = std::max((float)0.0, std::min((float)1.0 ,(GetMousePosition().x - element.x)/element.width));
             return _value;
         case VERTICAL:
-            _value = std::max((float)0.0, std::min((float)1.0 ,(float)1.0 - (GetMousePosition().y - element.y)/element.width));
+            _value = std::max((float)0.0, std::min((float)1.0 ,(float)1.0 - (GetMousePosition().y - element.y)/element.height));
             return _value;
         case HORIZONTALREV:
             _value = std::max((float)0.0, std::min((float)1.0 ,(float)1.0 - ((GetMousePosition().x - element.x)/element.width)));

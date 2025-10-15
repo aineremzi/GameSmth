@@ -58,6 +58,14 @@ int main()
                 currSettings.setFulscreenMode(WINDOWED);
             }
         }
+        if (IsKeyDown(KEY_LEFT_ALT)){
+            if(IsKeyDown(KEY_ONE))
+                currState = board;
+            else if(IsKeyDown(KEY_TWO))
+                currState = rules;
+            else if(IsKeyDown(KEY_THREE))
+                currState = settings;
+        }
 
         BeginDrawing();
         if (drawFPS)

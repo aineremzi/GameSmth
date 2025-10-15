@@ -7,7 +7,7 @@
 
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
-#define G 9.8f
+#define G 0.0001f
 
 void DrawTitle(Settings& settings){
     //Initializating variables
@@ -105,7 +105,8 @@ void DrawSettingsMenu(Settings &settings){
         else
             settingsNames[i].second->changeSize((float)settingsFontSize, (float)settingsFontSize);
     }
-    
+    static double xVelocity = 0;
+    static double yVelocity = 0;
     
     //Begin Drawing
     ClearBackground(BLACK);
@@ -117,12 +118,38 @@ void DrawSettingsMenu(Settings &settings){
         auto option = settingsNames[i].second;
         float outlineThickness = option->getWidth()/100.0f;
         if (i == 0){
-            static Slider x = {settingsXCoord*2.0f - dropDownListWidth/2.0f + dropDownListWidth, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[0]/(float)GetMonitorWidth(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
-            static Slider y = {settingsXCoord*2.0f + dropDownListWidth/2.0f + dropDownListWidth, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[1]/(float)GetMonitorHeight(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
+            static Slider x = {settingsXCoord*2.0f + dropDownListWidth/4.0f + dropDownListWidth*0.5, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize - dropDownListWidth/2.0f, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[0]/(float)GetMonitorWidth(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
+            static Slider y = {settingsXCoord*2.0f + dropDownListWidth/2.0f + dropDownListWidth*0.5, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize - dropDownListWidth/2.0f, (float)settingsFontSize, dropDownListWidth, lineThickness, settings.getResolution()[1]/(float)GetMonitorHeight(GetCurrentMonitor()), Slider::SliderPosition::VERTICAL};
+            x.changePosition(settingsXCoord*2.0f + dropDownListWidth/4.0f + dropDownListWidth*0.5, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize - dropDownListWidth/2.0f);
+            y.changePosition(settingsXCoord*2.0f + dropDownListWidth/2.0f + dropDownListWidth*0.5, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize - dropDownListWidth/2.0f);
+            x.changeSize((float)settingsFontSize, dropDownListWidth);
+            y.changeSize((float)settingsFontSize, dropDownListWidth);
             Button save {settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize};
+            xVelocity-=G*GetFrameTime();
+            yVelocity-=G*GetFrameTime();
+            if(x.pressed()){
+                xVelocity = 0;
+                x.getValue();
+            }
+            if(y.pressed()){
+                yVelocity = 0;
+                y.getValue();
+            }
+            x.setValue(x.value()+xVelocity);
+            y.setValue(y.value()+yVelocity);
             x.draw(GRAY);
             y.draw(GRAY);
-            // settings.setResolution({static_cast<int>(x.getValue()), static_cast<int>(y.getValue())});
+            if(save.pressed()){
+                save.drawButton(LIGHTGRAY, "Save", 10, WHITE);
+                save.drawOutline(BLUE, outlineThickness);
+            }else{
+                save.drawButton(GRAY, "Save", 10, WHITE);
+                save.drawOutline(DARKGRAY, outlineThickness);
+            }
+            if (save.released())
+                // settings.setResolution({800, 600});
+                settings.setResolution({static_cast<int>(GetMonitorWidth(0)*x.value()), static_cast<int>(GetMonitorHeight(0)*y.value())});
+                // std::cout << GetMonitorWidth(0)*x.value() << " " << GetMonitorHeight(0)*y.value() << std::endl;
             continue;
         }
         if (option->hovered()){
