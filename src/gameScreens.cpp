@@ -119,29 +119,21 @@ void DrawSettingsMenu(Settings &settings){
             if (option->released()){
                 if (i == 0 || i == 1){
                     DropDownList* element = dynamic_cast<DropDownList*>(option);
-                    if (!element->isOpen()){
+                    if (!element->isOpen())
                         element->switchState();
-                    }
                 }else if (i == 2){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
                     if(!element->isActive()){
+                        element->setValue("");
                         element->switchState();
-                        // HideCursor();
-                        // DisableCursor();
-                    }else{
-                        std::cout << "Ready";
-                        if (element->getKey() == KEY_ENTER){
-                            element->deactivate();
-                            EnableCursor();
-                            ShowCursor();
-                            int nfps = std::stoi(element->getValue());
-                            settings.setFPS(nfps);
-                        }
+                        HideCursor();
+                        DisableCursor();
                     }
                 }else if(i == 3){
                     CheckBox* element = dynamic_cast<CheckBox*>(option);
                     settings.setVsync(element->flip());
                 }
+                option->draw(GRAY);
             }else if(option->pressed()){
                 option->draw(LIGHTGRAY);
                 if (i == 4){
@@ -155,6 +147,18 @@ void DrawSettingsMenu(Settings &settings){
         }else{
             option->draw(GRAY);
             option->drawOutline(DARKGRAY, outlineThickness);
+        }
+        if (i == 2){
+            ValueBox* element = dynamic_cast<ValueBox*>(option);
+            if(element->isActive()){
+                if (element->getKey() == KEY_ENTER){
+                    element->deactivate();
+                    EnableCursor();
+                    ShowCursor();
+                    int nfps = std::stoi(element->getValue());
+                    settings.setFPS(nfps);
+                }
+            }
         }
     }
     for (int i = 0; i < 2; i++){
