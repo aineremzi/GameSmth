@@ -38,7 +38,7 @@ int main()
             drawFPS = !drawFPS;
 
         switch (currState){
-            case 1:
+            case 0:
                 SetExitKey(KEY_ESCAPE);
                 break;
             default:
