@@ -37,7 +37,7 @@ win: $(OBJ)
 	$(CC) $(OBJ) -Llib -lraylib -lgdi32 -lwinmm -o $(OUTPUT)
 	./$(OUTPUT)
 lin: $(OBJ)
-	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT)
+	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
 	./$(OUTPUT).game
 osx:
 	@echo Sorry, no mac support :(

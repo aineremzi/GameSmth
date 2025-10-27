@@ -32,7 +32,7 @@ int main()
     // Game loop
     while (!WindowShouldClose() && currState != quit)
     {
-        currSettings.setResolution({GetScreenWidth(), GetScreenHeight()});
+        currSettings.setResolution({GetScreenWidth(), GetScreenHeight()});  
      
         if (IsKeyPressed(KEY_F3))
             drawFPS = !drawFPS;

@@ -33,6 +33,7 @@ class Settings{
         Settings& operator=(const Settings&& other);
         ~Settings() = default;
         void init();
+        void initResolution() const;
         int save();
         std::array<int, 2> getResolution() const;
         void setResolution(std::array<int, 2> Resolution);

@@ -77,7 +77,6 @@ void Settings::setResolution(std::array<int, 2> newResolution){
     if (newResolution[0] == 0 || newResolution[1] == 0)
         newResolution = DEFAULT_RESOLUTION;
     resolution = newResolution;
-    SetWindowSize(resolution[0], resolution[1]);
 }
 int Settings::getFPS() const{
     return fpsLimit;
@@ -207,4 +206,7 @@ Settings& Settings::operator=(const Settings&& other){
     SFXVolume = std::move(other.SFXVolume);
     fpsLimit = std::move(other.fpsLimit);
     return *this;
+}
+void Settings::initResolution() const{
+    SetWindowSize(resolution[0], resolution[1]);
 }
