@@ -1,7 +1,6 @@
 #include "../include/raylib.h"
 #include <algorithm>
 #include "gameScreens.h"
-#include "gui.h"
 #include <string>
 #include <iostream>
 

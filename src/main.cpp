@@ -2,6 +2,7 @@
 #include "gameScreens.h"
 #include "gui.h"
 #include "settings.h"
+#include <memory>
 #include <iostream>
 
 #define TITLE "Dance on the boat"
@@ -9,12 +10,12 @@
 int main()
 {
     // Game window initialization
-    Settings currSettings;
-    InitWindow(currSettings.getResolution()[0], currSettings.getResolution()[1], TITLE);
+    std::unique_ptr currSettings = std::make_unique<Settings>();
+    InitWindow(currSettings->getResolution()[0], currSettings->getResolution()[1], TITLE);
     BeginDrawing();
-    DrawTitle(currSettings);
+    DrawTitle(*currSettings);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    currSettings.init();
+    currSettings->init();
 
     bool drawFPS = false;
 
@@ -32,7 +33,7 @@ int main()
     // Game loop
     while (!WindowShouldClose() && currState != quit)
     {
-        currSettings.setResolution({GetScreenWidth(), GetScreenHeight()});  
+        currSettings->setResolution({GetScreenWidth(), GetScreenHeight()});  
      
         if (IsKeyPressed(KEY_F3))
             drawFPS = !drawFPS;
@@ -49,10 +50,10 @@ int main()
         }
 
         if (IsKeyPressed(KEY_F11)){
-            if (currSettings.getFullscreenMode() == WINDOWED){
-                currSettings.setFulscreenMode(BORDERLESS);
+            if (currSettings->getFullscreenMode() == WINDOWED){
+                currSettings->setFulscreenMode(BORDERLESS);
             }else{
-                currSettings.setFulscreenMode(WINDOWED);
+                currSettings->setFulscreenMode(WINDOWED);
             }
         }
 
@@ -61,19 +62,19 @@ int main()
             DrawFPS(0, 0);
         switch (currState){
             case 0:{
-                int buttonChosen = DrawMenu(currSettings);
+                int buttonChosen = DrawMenu(*currSettings);
                 switch(buttonChosen){
-                    case MENU_PLAY:
+                    case MainMenu::MainMenuButtons::MENU_PLAY:
                         currState = board;
                         break;
-                    case MENU_RULES:
+                    case MainMenu::MainMenuButtons::MENU_RULES:
                             currState = rules;
                             break;    
-                    case MENU_SETTINGS:{
+                    case MainMenu::MainMenuButtons::MENU_SETTINGS:{
                         currState = settings;
                         break;
                     }
-                    case MENU_QUIT:
+                    case MainMenu::MainMenuButtons::MENU_QUIT:
                         currState = quit;
                         break;
                     default:
@@ -86,7 +87,7 @@ int main()
                 DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
                 break;
             case 2:
-                DrawSettingsMenu(currSettings);
+                DrawSettingsMenu(*currSettings);
                 break;
             case 4:
                 ClearBackground(BLACK);
@@ -96,5 +97,5 @@ int main()
         EndDrawing();
     }
 
-    currSettings.save();
+    currSettings->save();
 }
