@@ -25,13 +25,20 @@ class UIElement{
 
 class Button : public UIElement{
     private:
+        std::string str;
+        unsigned fontSize;
     public:
         Button() = delete;
-        Button(Rectangle button);
-        Button(float x, float y, float width, float height);
+        Button(Rectangle button, std::string label = "", int textFontSize = -1);
+        Button(float x, float y, float width, float height, std::string label = "", int textFontSize = -1);
         ~Button() = default;
-        void drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const;
+        void drawButton(const Color color, const Color textColor) const;
         void draw(const Color color) const override;
+        unsigned getFontSize();
+        void setFontSize(int newSize);
+        void changeLabel(std::string newLabel);
+        void changeLabel(char* newLabel);
+        std::string getLabel();
 };
 
 class CheckBox: public UIElement{

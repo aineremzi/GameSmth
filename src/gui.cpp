@@ -48,31 +48,60 @@ void UIElement::changeSize(Vector2 coords){
 
 
 //Button class realization
-Button::Button(Rectangle button){
+Button::Button(Rectangle button, std::string label, int textFontSize):str(label){
+    if (textFontSize < 0)
+        fontSize = button.height/2;
+    else
+        fontSize = textFontSize;
     element.x = button.x;
     element.y = button.y;
     element.width = button.width;
     element.height = button.height;
 }
-Button::Button(float x, float y, float width, float height){
+Button::Button(float x, float y, float width, float height, std::string label, int textFontSize){
+    if (textFontSize < 0)
+        fontSize = height/2;
+    else
+        fontSize = textFontSize;
     element.x = x;
     element.y = y;
     element.width = width;
     element.height = height;
 }
-void Button::drawButton(const Color color, const char* buttonText, const int textFontSize, const Color textColor) const{
+void Button::drawButton(const Color color, const Color textColor) const{
     DrawRectangleRec(element, color); 
-    if  (buttonText){
-        int buttonTextOffset = -MeasureText(buttonText, textFontSize)/2;
+    if  (!str.empty()){
+        int buttonTextOffset = -MeasureText(str.c_str(), fontSize)/2;
         int textX = element.x + element.width/2 + buttonTextOffset;
-        int textY = element.y + (element.height-textFontSize)/2;
-        DrawText(buttonText, textX, textY, textFontSize, textColor);
+        int textY = element.y + (element.height-fontSize)/2;
+        DrawText(str.c_str(), textX, textY, fontSize, textColor);
     }
 }
 void Button::draw(const Color color) const{
     DrawRectangleRec(element, color);
 }
-
+unsigned Button::getFontSize(){
+    return fontSize;
+}
+void Button::setFontSize(int newSize){
+    if ((newSize < 0))
+        fontSize = element.height/2;
+    else
+        fontSize = newSize;
+}
+void Button::changeLabel(std::string newLabel){
+    str = newLabel;
+}
+void Button::changeLabel(char* newLabel){
+    str.clear();
+    int i = 0;
+    while (newLabel[i] != '\0'){
+        str.push_back(newLabel[i++]);
+    }
+}
+std::string Button::getLabel(){
+    return str;
+}
 
 
 //CheckBox class realization

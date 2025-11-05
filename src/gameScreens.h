@@ -13,6 +13,8 @@ class Scene{
 
 class MainMenu: public Scene{
     public:
+        MainMenu();
+        ~MainMenu() = default;
         enum MainMenuButtons{
             MENU_PLAY = 0,
             MENU_SETTINGS,
@@ -25,6 +27,8 @@ class MainMenu: public Scene{
 
 class SettingMenu: public Scene{
     public:
+        SettingMenu();
+        ~SettingMenu() = default;
         enum SettingsButtons{
             SET_RESOLUTION = 0,
             SET_FULLSCREEN,
@@ -51,5 +55,3 @@ class RulesMenu: public Scene{
 
 
 void DrawTitle(Settings &settings);
-int DrawMenu(Settings &settings); // Returns id of button chosen, or -1 if none
-void DrawSettingsMenu(Settings& settings);
