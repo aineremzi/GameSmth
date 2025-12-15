@@ -6,6 +6,8 @@
 
 #define TITLE "Dance on the boat"
 
+int GameLoop(bool gameType);
+
 int main()
 {
     // Game window initialization
@@ -82,8 +84,51 @@ int main()
                 break;
             }
             case 1:
-                ClearBackground(BLACK);
-                DrawText("Here will be game board, trust me", 0, 540, 100, WHITE);
+                {
+                    ClearBackground(BLACK);
+                    Button sp{currSettings.getResolution()[0]/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
+                    Button ai{currSettings.getResolution()[0]*3/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
+                    
+                    float lineThickness = currSettings.getResolution()[0]/5.0f/100;
+                    if (sp.pressed()){
+                        sp.drawButton(LIGHTGRAY, "1 Player", 20, WHITE);
+                        sp.drawOutline(BLUE, lineThickness);
+                    }else{
+                        sp.drawButton(GRAY, "1 Player", 20, WHITE);
+                        
+                        //Drawing outline on hover
+                        if (sp.hovered()){
+                            sp.drawOutline(BLUE, lineThickness);
+                        }else{
+                            sp.drawOutline(DARKGRAY, lineThickness);
+                        }
+                    }
+                     if (ai.pressed()){
+                        ai.drawButton(LIGHTGRAY, "2 Players", 20, WHITE);
+                        ai.drawOutline(BLUE, lineThickness);
+                    }else{
+                        ai.drawButton(GRAY, "2 Players", 20, WHITE);
+                        
+                        //Drawing outline on hover
+                        if (ai.hovered()){
+                            ai.drawOutline(BLUE, lineThickness);
+                        }else{
+                            ai.drawOutline(DARKGRAY, lineThickness);
+                        }
+                    }
+
+                    if (sp.released() || ai.released()){
+                        if (sp.released()){
+                            EndDrawing();
+                            GameLoop(0);
+                            BeginDrawing();
+                        }else{
+                            EndDrawing();
+                            GameLoop(1);
+                            BeginDrawing();
+                        }
+                    }
+                }
                 break;
             case 2:
                 DrawSettingsMenu(currSettings);
@@ -97,4 +142,8 @@ int main()
     }
 
     currSettings.save();
+}
+
+int GameLoop(bool gameType){
+    
 }

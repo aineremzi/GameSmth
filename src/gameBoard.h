@@ -2,6 +2,4 @@
 #include "settings.h"
 #include "gui.h"
 
-int DrawGameBoard(int screenH, int screenW){
-    
-}
+int DrawGameBoard(int screenH, int screenW, unsigned state); // 0 - 
