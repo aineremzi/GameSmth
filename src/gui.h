@@ -26,7 +26,7 @@ class UIElement{
 class Button : public UIElement{
     private:
     public:
-        Button() = delete;
+        Button();
         Button(Rectangle button);
         Button(float x, float y, float width, float height);
         ~Button() = default;

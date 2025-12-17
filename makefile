@@ -40,7 +40,7 @@ lin: $(OBJ)
 	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
 	./$(OUTPUT).game
 osx:
-	@echo Sorry, no mac support :(
+	@echo Sorry, no mac support :'('
 
 $(OBJPATH)main.o: $(SOURCEPATH)main.cpp
 	$(CC) -c $(SOURCEPATH)main.cpp -o $(OBJPATH)main.o

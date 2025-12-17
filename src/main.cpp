@@ -5,8 +5,10 @@
 #include <iostream>
 
 #define TITLE "Dance on the boat"
+#define FIRSTC BLUE
+#define SECONDC RED
 
-int GameLoop(bool gameType);
+int GameLoop(bool gameType, Settings& settings);
 
 int main()
 {
@@ -88,7 +90,6 @@ int main()
                     ClearBackground(BLACK);
                     Button sp{currSettings.getResolution()[0]/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
                     Button ai{currSettings.getResolution()[0]*3/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
-                    
                     float lineThickness = currSettings.getResolution()[0]/5.0f/100;
                     if (sp.pressed()){
                         sp.drawButton(LIGHTGRAY, "1 Player", 20, WHITE);
@@ -103,7 +104,7 @@ int main()
                             sp.drawOutline(DARKGRAY, lineThickness);
                         }
                     }
-                     if (ai.pressed()){
+                    if (ai.pressed()){
                         ai.drawButton(LIGHTGRAY, "2 Players", 20, WHITE);
                         ai.drawOutline(BLUE, lineThickness);
                     }else{
@@ -120,11 +121,11 @@ int main()
                     if (sp.released() || ai.released()){
                         if (sp.released()){
                             EndDrawing();
-                            GameLoop(0);
+                            GameLoop(0, currSettings);
                             BeginDrawing();
                         }else{
                             EndDrawing();
-                            GameLoop(1);
+                            GameLoop(1, currSettings);
                             BeginDrawing();
                         }
                     }
@@ -133,7 +134,7 @@ int main()
             case 2:
                 DrawSettingsMenu(currSettings);
                 break;
-            case 4:
+            case 3:
                 ClearBackground(BLACK);
                 DrawText("You'll get it, not stupid", 100, 540, 100, WHITE);
                 break;
@@ -144,6 +145,65 @@ int main()
     currSettings.save();
 }
 
-int GameLoop(bool gameType){
+int GameLoop(bool gameType, Settings& settings){
+    bool turn = true;
+    auto resolution = settings.getResolution();
+    bool rolled = false;
+    Color dColor = WHITE;
+    Button table[24];
+
+    // board starting position
+    //               1  2  3  4  5  6  7  8  9  A  B  C
+    int cells[24] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1};
+
+
+    int dice[2] = {6, 6};
+
+    bool game = true;
+
+    while(game){
+
+        settings.setResolution({GetScreenWidth(), GetScreenHeight()});  
+        auto resolution = settings.getResolution();
+        Color tColor = (turn)?FIRSTC:SECONDC;
+        
+        Button rollButton = {resolution[0]/4.0f, resolution[1]*17/20.0f, resolution[0]/2.0f, resolution[1]/10.0f};
+        for (int i = 0; i < 24; i++){
+            table[i] = {resolution[0]*(i%12)/12.0f, resolution[1]*(1+(i/12))/4.0f, resolution[0]/12.0f, resolution[1]/4.0f};
+        }
+        
+        if (WindowShouldClose()){
+            settings.save();
+            CloseWindow();
+        }
+        if (!rolled & (rollButton.clicked() || IsKeyPressed(KEY_SPACE))){
+            dColor = tColor;
+            dice[0] = GetRandomValue(1, 6);
+            dice[1] = GetRandomValue(1, 6);
+            rolled = true;
+        }
+
+        BeginDrawing();
+
+        ClearBackground(BLACK);
+        if (!rolled)
+            rollButton.drawButton(tColor, "Roll", 20, WHITE);
+
+        for (int i = 0; i < 2; i++){
+            DrawRectangleLines(resolution[0]*(12.75+2.5*i)/30.0f, resolution[1]/20.0f, resolution[0]/15.0f, resolution[0]/15.0f, WHITE);
+            DrawText(std::to_string(dice[i]).c_str(), resolution[0]*(13.25+2.5*i)/30.0f, resolution[1]*1.1/20.0f, resolution[0]/15.0f, dColor);
+        }
+
+        for (int i = 0; i < 24; i++){
+            table[i].draw(GRAY);
+            table[i].drawOutline(tColor, resolution[0]/1200.0f);
+        }
+
+        EndDrawing();
+        if (IsKeyPressed(KEY_ESCAPE))
+            game = !game;
+    }
     
+    return 0;
 }

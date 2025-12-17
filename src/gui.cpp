@@ -54,6 +54,12 @@ Button::Button(Rectangle button){
     element.width = button.width;
     element.height = button.height;
 }
+Button::Button(){
+    element.x = 0;
+    element.y = 0;
+    element.width = 0;
+    element.height = 0;
+}
 Button::Button(float x, float y, float width, float height){
     element.x = x;
     element.y = y;
