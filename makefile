@@ -1,7 +1,7 @@
 .PHONY: all clean
 TargetOS = lin
 CC = g++
-OBJ = obj/main.o obj/settings.o obj/gui.o obj/gameScreens.o
+OBJ = obj/main.o obj/settings.o obj/gui.o obj/gameScreens.o obj/gameBoard.o
 OUTPUT = main
 OBJPATH = obj/
 SOURCEPATH = src/
@@ -33,13 +33,13 @@ osxclean: linclean
 linclean:
 	rm -fr $(OBJPATH)*.o $(OUTPUT).game
 
-win: $(OUTPUT)
+win: $(OUTPUT).exe
 	./$(OUTPUT)
 lin: $(OUTPUT).game
 	./$(OUTPUT).game
 osx: sorry
 
-$(OUTPUT): $(OBJ)
+$(OUTPUT).exe: $(OBJ)
 	$(CC) $(OBJ) -Llib -lraylib -lgdi32 -lwinmm -o $(OUTPUT)
 $(OUTPUT).game: $(OBJ)
 	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
@@ -54,3 +54,5 @@ $(OBJPATH)gui.o: $(SOURCEPATH)gui.cpp
 	$(CC) -c $(SOURCEPATH)gui.cpp -o $(OBJPATH)gui.o
 $(OBJPATH)gameScreens.o: $(SOURCEPATH)gameScreens.cpp
 	$(CC) -c $(SOURCEPATH)gameScreens.cpp -o $(OBJPATH)gameScreens.o
+$(OBJPATH)gameBoard.o: $(SOURCEPATH)gameBoard.cpp
+	$(CC) -c $(SOURCEPATH)gameBoard.cpp -o $(OBJPATH)gameBoard.o

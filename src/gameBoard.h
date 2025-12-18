@@ -2,4 +2,4 @@
 #include "settings.h"
 #include "gui.h"
 
-int DrawGameBoard(int screenH, int screenW, unsigned state); // 0 - 
+int GameLoop(bool gameType, Settings& settings);
