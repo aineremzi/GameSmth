@@ -147,6 +147,8 @@ int main()
 
 int GameLoop(bool gameType, Settings& settings){
     bool turn = true;
+    int lastPressed = 0;
+    int chosen = -1;
     auto resolution = settings.getResolution();
     bool rolled = false;
     Color dColor = WHITE;
@@ -173,26 +175,6 @@ int GameLoop(bool gameType, Settings& settings){
         Button rollButton = {resolution[0]*3/8.0f, resolution[1]*17/20.0f, resolution[0]/4.0f, resolution[1]/10.0f};
         for (int i = 0; i < 24; i++){
             table[i] = {resolution[0]*(i%12)/12.0f, resolution[1]*(1+(i/12))/4.0f, resolution[0]/12.0f, resolution[1]/4.0f};
-        }
-
-        if (IsKeyDown(KEY_LEFT_ALT) && IsKeyDown(KEY_DELETE)){
-            if (IsKeyDown(KEY_ONE)){
-                warriors[0] = 0;
-            }else if(IsKeyDown(KEY_TWO)){
-                warriors[1] = 0;
-            }
-        }
-        if (WindowShouldClose()){
-            settings.save();
-            CloseWindow();
-        }
-
-        //Game logic
-        if (!rolled & (rollButton.clicked() || IsKeyPressed(KEY_SPACE))){
-            dColor = tColor;
-            dice[0] = GetRandomValue(1, 6);
-            dice[1] = GetRandomValue(1, 6);
-            rolled = true;
         }
 
         if(IsKeyDown(KEY_LEFT_ALT)&&IsKeyDown(KEY_ONE)&&IsKeyUp(KEY_LEFT_SHIFT)){
@@ -222,6 +204,83 @@ int GameLoop(bool gameType, Settings& settings){
             dice[1] = 6;
         }
 
+        if(IsKeyDown(KEY_LEFT_ALT)&&IsKeyDown(KEY_LEFT_SHIFT)&&IsKeyDown(KEY_ENTER)){
+            turn = !turn;
+            rolled = false;
+            continue;
+        }
+
+        if (IsKeyDown(KEY_LEFT_ALT) && IsKeyDown(KEY_DELETE)){
+            if (IsKeyDown(KEY_ONE)){
+                warriors[0] = 0;
+            }else if(IsKeyDown(KEY_TWO)){
+                warriors[1] = 0;
+            }
+        }
+        if (WindowShouldClose()){
+            settings.save();
+            CloseWindow();
+        }
+
+        //Game logic
+        if (!rolled & (rollButton.clicked() || IsKeyPressed(KEY_SPACE))){
+            dColor = tColor;
+            dice[0] = GetRandomValue(1, 6);
+            dice[1] = GetRandomValue(1, 6);
+            rolled = true;
+        }
+        
+
+        for(int i = 0; i < 24; i++){
+            if(i == chosen){
+                int pos;
+                for(int j = 0; j < 2; j++){
+                    if (turn){
+                        if (i <= 11){
+                            pos = (i - dice[j] >= 0)?i-dice[j]:dice[j]-i+11; 
+                        }else{
+                            pos = (i + dice[j] <= 23)?i+dice[j]:-1;
+                        }
+                        if (pos <= 23 && pos >= 0){
+                            if(table[pos].clicked() && cells[pos] >= -1 && lastPressed > 10){
+                                cells[pos] = (cells[pos] == -1)?1:cells[pos]+1;
+                                cells[i]--;
+                                lastPressed = 0;
+                                chosen = -1;
+                            }
+                        }
+                    }else{
+                        if (i <= 11){
+                            pos = (i + dice[j] <= 11)?i+dice[j]:-1; 
+                        }else{
+                            pos = (i - dice[j] >= 12)?i-dice[j]:dice[j] - i%12;
+                        }
+
+                        if (pos <= 23 && pos >= 0){
+                            if(table[pos].clicked() && cells[pos] <= 1 && lastPressed > 10){
+                                cells[pos] = (cells[pos] == 1)?-1:cells[pos]-1;
+                                cells[i]++;
+                                lastPressed = 0;
+                                chosen = -1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(lastPressed > 10){
+            for(int i = 0; i < 24; i++){
+                if(table[i].clicked()){
+                    if(turn){
+                        chosen = (cells[i] > 0)?i:-1;
+                    }else{
+                        chosen = (cells[i] < 0)?i:-1;
+                    }
+                }
+            }
+        }else{
+            lastPressed++;
+        }
 
         //Drawing the game
         BeginDrawing();
@@ -240,36 +299,84 @@ int GameLoop(bool gameType, Settings& settings){
 
         for (int i = 0; i < 24; i++){
             table[i].draw(GRAY);
+        }
+
+        for (int i = 0; i < 24; i++){
+            if(i == chosen){
+                table[i].draw(LIGHTGRAY);
+            }   
+
+
             if(cells[i] != 0){
                 DrawRectangle(table[i].getX()+table[i].getWidth()/4, table[i].getY() + table[i].getHeight()*2/4, table[i].getWidth()/2, table[i].getWidth()/2, (cells[i] > 0)?FIRSTC:SECONDC);
                 DrawText(std::to_string(abs(cells[i])).c_str(), table[i].getX()+table[i].getWidth()/2 - MeasureText(std::to_string(abs(cells[i])).c_str(), table[i].getWidth()/2)/2.0f, table[i].getY() + table[i].getHeight()/8, table[i].getWidth()/2, (cells[i] > 0)?FIRSTC:SECONDC);
             }
 
+
+
             bool available = false;
             if (rolled){
                 int pos;
-                if (turn){
-                    for(int j = 0; j < 2; j++){
+                for(int j = 0; j < 2; j++){
+                    if (turn){
                         if (i <= 11){
                             pos = (i - dice[j] >= 0)?i-dice[j]:dice[j]-i+11; 
-                            if (pos <= 23 && pos >= 0)
+                            if (pos <= 23 && pos >= 0){
                                 available = (cells[pos] >= -1)?true||available:available||false;
+                                if(i == chosen){
+                                    if(turn){
+                                        if(cells[pos] >= 0)
+                                            table[pos].draw({0,0,255,100});
+                                    }else{
+                                        if(cells[pos] <= 0)
+                                            table[pos].draw({255,0,0,100});
+                                    }
+                                }
+                            }
                         }else{
                             pos = (i + dice[j] <= 23)?i+dice[j]:-1;
-                            if (pos <= 23 && pos >= 0)
+                            if (pos <= 23 && pos >= 0){
                                 available = (cells[pos] >= -1)?true||available:available||false;
+                                if(i == chosen){
+                                    if(turn){
+                                        if(cells[pos] >= 0)
+                                            table[pos].draw({0,0,255,100});
+                                    }else{
+                                        if(cells[pos] <= 0)
+                                            table[pos].draw({255,0,0,100});
+                                    }
+                                }
+                            }
                         }
-                    }
-                }else{
-                    for(int j = 0; j < 2; j++){
+                    }else{
                         if (i <= 11){
                             pos = (i + dice[j] <= 11)?i+dice[j]:-1; 
-                            if (pos <= 23 && pos >= 0)
+                            if (pos <= 23 && pos >= 0){
                                 available = (cells[pos] <= 1)?true||available:available||false;
+                                if(i == chosen){
+                                    if(turn){
+                                        if(cells[pos] >= 0)
+                                            table[pos].draw({0,0,255,100});
+                                    }else{
+                                        if(cells[pos] <= 0)
+                                            table[pos].draw({255,0,0,100});
+                                    }
+                                }
+                            }
                         }else{
                             pos = (i - dice[j] >= 12)?i-dice[j]:dice[j] - i%12;
-                            if (pos <= 23 && pos >= 0)
+                            if (pos <= 23 && pos >= 0){
                                 available = (cells[pos] <= 1)?true||available:available||false;
+                                if(i == chosen){
+                                    if(turn){
+                                        if(cells[pos] >= 0)
+                                            table[pos].draw({0,0,255,100});
+                                    }else{
+                                        if(cells[pos] <= 0)
+                                            table[pos].draw({255,0,0,100});
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -286,6 +393,9 @@ int GameLoop(bool gameType, Settings& settings){
         }
 
         if(!moveable && rolled){
+            chosen = -1;
+            turn = !turn;
+            rolled = false;
             continue;
         }
 

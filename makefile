@@ -33,13 +33,17 @@ osxclean: linclean
 linclean:
 	rm -fr $(OBJPATH)*.o $(OUTPUT).game
 
-win: $(OBJ)
-	$(CC) $(OBJ) -Llib -lraylib -lgdi32 -lwinmm -o $(OUTPUT)
+win: $(OUTPUT)
 	./$(OUTPUT)
-lin: $(OBJ)
-	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
+lin: $(OUTPUT).game
 	./$(OUTPUT).game
-osx:
+osx: sorry
+
+$(OUTPUT): $(OBJ)
+	$(CC) $(OBJ) -Llib -lraylib -lgdi32 -lwinmm -o $(OUTPUT)
+$(OUTPUT).game: $(OBJ)
+	$(CC) $(OBJ) -LlinLib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $(OUTPUT).game
+sorry:
 	@echo Sorry, no mac support :'('
 
 $(OBJPATH)main.o: $(SOURCEPATH)main.cpp
