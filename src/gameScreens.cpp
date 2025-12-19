@@ -7,7 +7,7 @@
 
 #define MENUBUTTONSNUM 4
 #define SETTINGSNUM 5
-#define G 0.0001f
+#define G 0.001f
 
 void DrawTitle(Settings& settings){
     //Initializating variables
