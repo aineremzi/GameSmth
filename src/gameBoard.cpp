@@ -13,14 +13,14 @@ int GameLoop(bool gameType, Settings& settings){
     bool rolled = false;
     Color dColor = WHITE;
     Button table[24];
-    int tavern[2][2] = {{0, 0}, {0, 0}};
+    int tavern[2][2] = {{1, 1}, {0, 0}};
 
     // board starting position
     //                1  2  3  4  5  6  7  8  9  A  B  C
-    // int cells[24] = { 5, 0, 0, 0,-3, 0,-5, 0, 0, 0, 0, 2,
-    //                  -5, 0, 0, 0, 3, 0, 5, 0, 0, 0, 0,-2};
-    int cells[24] = { 0, 0, 0, 0,0, 0, 0, 0, -2, -3, -3, -2,
-                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,2};
+    int cells[24] = { 5, 0, 0, 0,-3, 0,-5, 0, 0, 0, 0, 2,
+                     -5, 0, 0, 0, 3, 0, 5, 0, 0, 0, 0,-2};
+    // int cells[24] = { 0, 0, 0, 0,0, 0, 0, 0, -2, -3, -3, -2,
+    //                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,2};
 
     int totalWarriors[2] = {0, 0};
     for(int i = 0; i < 24; i++){
@@ -62,7 +62,7 @@ int GameLoop(bool gameType, Settings& settings){
         bool moveable = false;
         bool tavernHighlight[2] = {false, false};
         
-        bool finalPhase[2] = {true,true};
+        bool finalPhase[2] = {true&&tavern[0][0] == 0,true&&tavern[0][1] == 0};
         for (int i = 0; i < 18; i++){
             if (cells[i] > 0){
                 finalPhase[0] = false;
