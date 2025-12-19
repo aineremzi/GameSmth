@@ -13,7 +13,7 @@ int GameLoop(bool gameType, Settings& settings){
     bool rolled = false;
     Color dColor = WHITE;
     Button table[24];
-    int tavern[2][2] = {{1, 1}, {0, 0}};
+    int tavern[2][2] = {{0, 0}, {0, 0}};
 
     // board starting position
     //                1  2  3  4  5  6  7  8  9  A  B  C
