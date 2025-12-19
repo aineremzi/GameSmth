@@ -49,13 +49,13 @@ int main()
                 break;
         }
 
-        if (IsKeyPressed(KEY_F11)){
-            if (currSettings.getFullscreenMode() == WINDOWED){
-                currSettings.setFulscreenMode(BORDERLESS);
-            }else{
-                currSettings.setFulscreenMode(WINDOWED);
-            }
-        }
+        // if (IsKeyPressed(KEY_F11)){
+        //     if (currSettings.getFullscreenMode() == WINDOWED){
+        //         currSettings.setFulscreenMode(BORDERLESS);
+        //     }else{
+        //         currSettings.setFulscreenMode(WINDOWED);
+        //     }
+        // }
 
         BeginDrawing();
         if (drawFPS)
@@ -84,48 +84,48 @@ int main()
             }
             case 1:
                 {
-                    ClearBackground(BLACK);
-                    Button sp{currSettings.getResolution()[0]/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
-                    Button ai{currSettings.getResolution()[0]*3/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
-                    float lineThickness = currSettings.getResolution()[0]/5.0f/100;
-                    if (sp.pressed()){
-                        sp.drawButton(LIGHTGRAY, "1 Player", 20, WHITE);
-                        sp.drawOutline(BLUE, lineThickness);
-                    }else{
-                        sp.drawButton(GRAY, "1 Player", 20, WHITE);
+                    // ClearBackground(BLACK);
+                    // Button sp{currSettings.getResolution()[0]/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
+                    // Button ai{currSettings.getResolution()[0]*3/5.0f, currSettings.getResolution()[1]/2.0f-100, currSettings.getResolution()[0]/5.0f, 200};
+                    // float lineThickness = currSettings.getResolution()[0]/5.0f/100;
+                    // if (sp.pressed()){
+                    //     sp.drawButton(LIGHTGRAY, "1 Player", 20, WHITE);
+                    //     sp.drawOutline(BLUE, lineThickness);
+                    // }else{
+                    //     sp.drawButton(GRAY, "1 Player", 20, WHITE);
                         
-                        //Drawing outline on hover
-                        if (sp.hovered()){
-                            sp.drawOutline(BLUE, lineThickness);
-                        }else{
-                            sp.drawOutline(DARKGRAY, lineThickness);
-                        }
-                    }
-                    if (ai.pressed()){
-                        ai.drawButton(LIGHTGRAY, "2 Players", 20, WHITE);
-                        ai.drawOutline(BLUE, lineThickness);
-                    }else{
-                        ai.drawButton(GRAY, "2 Players", 20, WHITE);
+                    //     //Drawing outline on hover
+                    //     if (sp.hovered()){
+                    //         sp.drawOutline(BLUE, lineThickness);
+                    //     }else{
+                    //         sp.drawOutline(DARKGRAY, lineThickness);
+                    //     }
+                    // }
+                    // if (ai.pressed()){
+                    //     ai.drawButton(LIGHTGRAY, "2 Players", 20, WHITE);
+                    //     ai.drawOutline(BLUE, lineThickness);
+                    // }else{
+                    //     ai.drawButton(GRAY, "2 Players", 20, WHITE);
                         
-                        //Drawing outline on hover
-                        if (ai.hovered()){
-                            ai.drawOutline(BLUE, lineThickness);
-                        }else{
-                            ai.drawOutline(DARKGRAY, lineThickness);
-                        }
-                    }
+                    //     //Drawing outline on hover
+                    //     if (ai.hovered()){
+                    //         ai.drawOutline(BLUE, lineThickness);
+                    //     }else{
+                    //         ai.drawOutline(DARKGRAY, lineThickness);
+                    //     }
+                    // }
 
-                    if (sp.released() || ai.released()){
-                        if (sp.released()){
+                    // if (sp.released() || ai.released()){
+                    //     if (sp.released()){
+                    //         EndDrawing();
+                    //         GameLoop(1, currSettings);
+                    //         BeginDrawing();
+                    //     }else{
                             EndDrawing();
-                            GameLoop(0, currSettings);
+                            currState = static_cast<GameStates>(GameLoop(0, currSettings));
                             BeginDrawing();
-                        }else{
-                            EndDrawing();
-                            GameLoop(1, currSettings);
-                            BeginDrawing();
-                        }
-                    }
+                    //     }
+                    // }
                 }
                 break;
             case 2:
