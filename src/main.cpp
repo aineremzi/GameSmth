@@ -3,7 +3,7 @@
 #include "gui.h"
 #include "settings.h"
 #include "gameBoard.h"
-#include <iostream>
+
 
 #define TITLE "Dance on the boat"
 
