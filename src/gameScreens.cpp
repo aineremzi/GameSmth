@@ -5,8 +5,8 @@
 #include <string>
 #include <iostream>
 
-#define MENUBUTTONSNUM 4
-#define SETTINGSNUM 5
+#define MENUBUTTONSNUM 3
+#define SETTINGSNUM 2
 #define G 0.001f
 
 void DrawTitle(Settings& settings){
@@ -41,10 +41,10 @@ int DrawMenu(Settings &settings){
     int buttonFontSize = std::min(buttonWidth/10, buttonHeight/2);
     float buttonVerticalPos = screenWidth*(bxm-1)/(2*bxm);
     Button buttons[MENUBUTTONSNUM] = {{buttonVerticalPos, screenHeight*2/6.0f, (float)buttonWidth, (float)buttonHeight}, 
-                            {buttonVerticalPos, screenHeight*4/6.0f, (float)buttonWidth, (float)buttonHeight}, 
-                            {buttonVerticalPos, screenHeight*5/6.0f, (float)buttonWidth, (float)buttonHeight},
-                            {buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}}; // Array with buttons
-    const char* buttonTexts[MENUBUTTONSNUM] = {"Play", "Settings", "Quit", "Rules"};
+                            {buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}, 
+                            {buttonVerticalPos, screenHeight*4/6.0f, (float)buttonWidth, (float)buttonHeight},
+                            /*{buttonVerticalPos, screenHeight*3/6.0f, (float)buttonWidth, (float)buttonHeight}*/}; // Array with buttons
+    const char* buttonTexts[MENUBUTTONSNUM] = {"Play", "Settings", "Quit"/*, "Rules"*/};
     
     //Drawing menu
     ClearBackground(BLACK);
@@ -93,11 +93,11 @@ void DrawSettingsMenu(Settings &settings){
     float lineThickness = std::min(dropDownListWidth, (float)settingsFontSize)/5.0f;
     const char* resolutions[] = {"7680x4320", "3840x2160", "2560x1440", "1920x1080", "1280x720", "1920x1200", "2560x1600", "640x480", "800x600", "1024x768", "1600x1200"};
     const char* FSModes[] = {"Windowed", "Borderless", "Fullscreen"};
-    static std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, resolutions, 11, 0}}, 
-                                                                            {"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
+    static std::pair<const char*, UIElement*> settingsNames[SETTINGSNUM] = {//{"Resolution", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(1)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, resolutions, 11, 0}}, 
+                                                                            //{"Fullscreen", new DropDownList{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(2)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize,  FSModes, 3, static_cast<int>(settings.getFullscreenMode())}}, 
                                                                             {"Limit FPS", new ValueBox{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(3)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, std::to_string(settings.getFPS()), ValueBox::BoxType::NUMBERS}},
                                                                             {"Vsync", new CheckBox{settingsXCoord*2.0f - settingsFontSize/2.0f, (float)(screenHeight*(4)/settingsYCoef) + titleYCoords + titleFontSize, (float)settingsFontSize, (float)settingsFontSize, lineThickness, settings.getVsync()}},
-                                                                            {"Sound effects", new Slider{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, settings.getVolume()}}};
+                                                                            /*{"Sound effects", new Slider{settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(5)/settingsYCoef) + titleYCoords + titleFontSize, dropDownListWidth, (float)settingsFontSize, lineThickness, settings.getVolume()}}*/};
     for (int i = 0; i < SETTINGSNUM; i++){
         settingsNames[i].second->changePosition({settingsXCoord*2.0f - dropDownListWidth/2.0f, (float)(screenHeight*(i+1)/settingsYCoef) + titleYCoords + titleFontSize});
         if (i != 3)
@@ -156,34 +156,26 @@ void DrawSettingsMenu(Settings &settings){
         }
         if (option->hovered()){
             if (option->released()){
-                if (i == 0 || i == 1){
-                    DropDownList* element = dynamic_cast<DropDownList*>(option);
-                    if (!element->isOpen()){
-                        element->switchState();
-                    }
-                }else if (i == 2){
+                // if (i == 0 || i == 1){
+                //     DropDownList* element = dynamic_cast<DropDownList*>(option);
+                //     if (!element->isOpen())
+                //         element->switchState();
+                if (i == 0){
                     ValueBox* element = dynamic_cast<ValueBox*>(option);
                     if(!element->isActive()){
+                        element->setValue("");
                         element->switchState();
-                        // HideCursor();
-                        // DisableCursor();
-                    }else{
-                        std::cout << "Ready";
-                        if (element->getKey() == KEY_ENTER){
-                            element->deactivate();
-                            EnableCursor();
-                            ShowCursor();
-                            int nfps = std::stoi(element->getValue());
-                            settings.setFPS(nfps);
-                        }
+                        HideCursor();
+                        DisableCursor();
                     }
-                }else if(i == 3){
+                }else if(i == 1){
                     CheckBox* element = dynamic_cast<CheckBox*>(option);
                     settings.setVsync(element->flip());
                 }
+                option->draw(GRAY);
             }else if(option->pressed()){
                 option->draw(LIGHTGRAY);
-                if (i == 4){
+                if (i == 2){
                     Slider* element = dynamic_cast<Slider*>(option);
                     settings.setVolume(element->getValue());
                 }

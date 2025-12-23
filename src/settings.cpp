@@ -74,6 +74,8 @@ std::array<int, 2> Settings::getResolution() const{
     return resolution;
 }
 void Settings::setResolution(std::array<int, 2> newResolution){
+    if (newResolution[0] == 0 || newResolution[1] == 0)
+        newResolution = DEFAULT_RESOLUTION;
     resolution = newResolution;
     SetWindowSize(resolution[0], resolution[1]);
 }
@@ -81,14 +83,14 @@ int Settings::getFPS() const{
     return fpsLimit;
 }
 void Settings::setFPS(int& fps){
-    fpsLimit = fps;
+    fpsLimit = std::max(fps, 0);
     SetTargetFPS(fps);
 }
 float Settings::getVolume() const{
     return SFXVolume;
 }
 void Settings::setVolume(float volume){
-    SFXVolume = volume;
+    SFXVolume = std::min(1.0f, std::max(volume, 0.0f));
 }
 FullscreenMode Settings::getFullscreenMode() const{
     return fsMode;
@@ -205,4 +207,7 @@ Settings& Settings::operator=(const Settings&& other){
     SFXVolume = std::move(other.SFXVolume);
     fpsLimit = std::move(other.fpsLimit);
     return *this;
+}
+void Settings::initResolution() const{
+    SetWindowSize(resolution[0], resolution[1]);
 }

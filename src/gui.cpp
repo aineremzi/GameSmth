@@ -1,5 +1,6 @@
 #include "gui.h"
 #include <algorithm>
+#include <iostream>
 
 bool UIElement::hovered() const{
     return CheckCollisionPointRec(GetMousePosition(), element);
@@ -52,6 +53,12 @@ Button::Button(Rectangle button){
     element.y = button.y;
     element.width = button.width;
     element.height = button.height;
+}
+Button::Button(){
+    element.x = 0;
+    element.y = 0;
+    element.width = 0;
+    element.height = 0;
 }
 Button::Button(float x, float y, float width, float height){
     element.x = x;
@@ -141,16 +148,16 @@ Color ValueBox::getTextColor() const{
 }
 int ValueBox::getKey(){
     int key = GetCharPressed();
+    if(IsKeyDown(KEY_ENTER))
+    return KEY_ENTER;
     while (key > 0){
-        if(key == KEY_ENTER){
-            return KEY_ENTER;
-        }else if (key == KEY_BACKSPACE){
-            if (_value.length() != 0)
-                _value.pop_back();
-        }
         if (key >= limits[type].first && key <= limits[type].second){
             _value.push_back((char)key);
         }
+        key = GetCharPressed();
+    }
+    if (IsKeyDown(KEY_BACKSPACE) && _value.length() != 0){
+        _value.pop_back();
     }
     return key;
 }
