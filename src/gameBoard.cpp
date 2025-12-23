@@ -38,6 +38,8 @@ int GameLoop(bool gameType, Settings& settings){
 
     while(game){
 
+        if (IsKeyPressed(KEY_ESCAPE))
+            game = !game;
         if (IsKeyPressed(KEY_F3))
             drawFPS = !drawFPS;
         if (drawFPS)
@@ -227,7 +229,17 @@ int GameLoop(bool gameType, Settings& settings){
         //Drawing the game
         BeginDrawing();
 
+        
         ClearBackground(BLACK);
+        if(tavern[1][0] == totalWarriors[0]){
+            DrawText("Player 1 wins", resolution[0]/2.0f - MeasureText("Player 1 wins", resolution[0]/10)/2.0f, resolution[1]/2.0f, resolution[0]/10, FIRSTC);
+            EndDrawing();
+            continue;
+        }else if (tavern[1][1] == totalWarriors[1]){
+            DrawText("Player 2 wins", resolution[0]/2.0f - MeasureText("Player 2 wins", resolution[0]/10)/2.0f, resolution[1]/2.0f- resolution[0]/20, resolution[0]/10, SECONDC);
+            EndDrawing();
+            continue;
+        }
         if (!rolled)
             rollButton.drawButton(tColor, "Roll", 20, WHITE);
 
@@ -285,7 +297,7 @@ int GameLoop(bool gameType, Settings& settings){
                                         }
                                     }
 
-                                    if((highest && i+dice[j] > 23) || (!highest && i+dice[j] == 24) && cells[i] > 0 && (i == chosen)){
+                                    if(((highest && i+dice[j] > 23) || (!highest && i+dice[j] == 24)) && cells[i] > 0 && (i == chosen)){
                                         tavernHighlight[0] = true;
                                         available = true;
                                     }
@@ -323,7 +335,7 @@ int GameLoop(bool gameType, Settings& settings){
                                         }
                                     }
 
-                                    if((highest && i+dice[j] > 11) || (!highest && i+dice[j] == 12) && cells[i] < 0 && i == chosen){
+                                    if(((highest && i+dice[j] > 11) || (!highest && i+dice[j] == 12)) && cells[i] < 0 && i == chosen){
                                         tavernHighlight[1] = true;
                                         available = true;
                                     }
@@ -401,9 +413,6 @@ int GameLoop(bool gameType, Settings& settings){
 
         EndDrawing();
 
-
-        if (IsKeyPressed(KEY_ESCAPE))
-            game = !game;
 
         if(IsKeyDown(KEY_F5) && IsKeyDown(KEY_F6))
             devTools = true;
